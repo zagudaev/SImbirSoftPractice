@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.example.SimbirSoftPractice.domain.User;
+import ru.example.SimbirSoftPractice.domain.model.User;
+import ru.example.SimbirSoftPractice.domain.modelForm.UserForm;
 
 import java.util.List;
 
@@ -12,12 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     @Override
-    public long save(User user) {
+    public long save(UserForm user) {
         return 0;
     }
 
     @Override
-    public long update(User user) {
+    public long update(UserForm user) {
         return 0;
     }
 

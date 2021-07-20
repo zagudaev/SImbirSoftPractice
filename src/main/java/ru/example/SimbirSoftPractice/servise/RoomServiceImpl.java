@@ -2,7 +2,8 @@ package ru.example.SimbirSoftPractice.servise;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.example.SimbirSoftPractice.domain.Room;
+import ru.example.SimbirSoftPractice.domain.model.Room;
+import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
 
 import java.util.List;
 
@@ -10,12 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomServiceImpl implements RoomService {
     @Override
-    public long save(Room room) {
+    public long save(RoomForm room) {
         return 0;
     }
 
     @Override
-    public long update(Room room) {
+    public long update(RoomForm room) {
         return 0;
     }
 

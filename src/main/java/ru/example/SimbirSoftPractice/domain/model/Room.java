@@ -1,6 +1,7 @@
-package ru.example.SimbirSoftPractice.domain;
+package ru.example.SimbirSoftPractice.domain.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,11 +12,12 @@ import java.util.List;
 @Getter
 @Setter
 @Table
+@NoArgsConstructor
 public class Room {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -27,7 +29,7 @@ public class Room {
     private boolean privat;
 
     @ManyToMany(mappedBy = "room" )
-    private Collection<User> users;
+    private List<User> users;
 
     @OneToMany(mappedBy = "room")
     private List<Massege> masseges;

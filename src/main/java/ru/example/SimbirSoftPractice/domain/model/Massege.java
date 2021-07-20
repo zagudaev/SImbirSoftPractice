@@ -1,7 +1,8 @@
-package ru.example.SimbirSoftPractice.domain;
+package ru.example.SimbirSoftPractice.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,10 +12,11 @@ import java.time.LocalDate;
 @Table
 @Getter
 @Setter
+@NoArgsConstructor
 public class Massege {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn

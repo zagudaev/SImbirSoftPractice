@@ -1,6 +1,7 @@
-package ru.example.SimbirSoftPractice.domain;
+package ru.example.SimbirSoftPractice.domain.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import java.util.Collection;
 public class Role {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     private String name;
 
