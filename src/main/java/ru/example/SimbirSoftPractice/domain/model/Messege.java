@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Massege {
+public class Messege {
     @Id
     @GeneratedValue
     private Long id;
@@ -30,5 +30,5 @@ public class Massege {
     private LocalDate date;
 
     @Column(length = 500)
-    private String textMassege;
+    private String textMessege;
 }

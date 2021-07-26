@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.example.SimbirSoftPractice.domain.model.User;
 import ru.example.SimbirSoftPractice.domain.modelForm.UserForm;
+import ru.example.SimbirSoftPractice.domain.modelVO.UserVO;
 import ru.example.SimbirSoftPractice.servise.UserServiceImpl;
 
 import java.util.List;
@@ -22,10 +23,10 @@ public class UserController {
     private long update(@RequestBody UserForm user){return  userService.update(user);}
 
     @GetMapping("/all")
-    private List<User> findAll () { return  userService.findAll();}
+    private List<UserVO> findAll () { return  userService.findAll();}
 
     @DeleteMapping("/{id}")
-    private void delete(@PathVariable long id){ userService.delete(id);}
+    private void delete(@PathVariable Long id){ userService.delete(id);}
 
 
 }

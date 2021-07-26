@@ -2,7 +2,7 @@ package ru.example.SimbirSoftPractice.domain.modelForm;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import ru.example.SimbirSoftPractice.domain.model.Massege;
+import ru.example.SimbirSoftPractice.domain.model.Messege;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.model.User;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Data
-public class MassegeForm {
+public class MessegeForm {
     private Long id;
     @NotBlank
     private Long userId;
@@ -27,19 +27,19 @@ public class MassegeForm {
     private LocalDate date;
 
 
-    public Massege toMassege(UserDao userDao, RoomDao roomDao){
-        Massege massege = new Massege();
-        massege = update(massege,userDao,roomDao);
-        return massege;
+    public Messege toMessege(UserDao userDao, RoomDao roomDao){
+        Messege messege = new Messege();
+        messege = update(messege,userDao,roomDao);
+        return messege;
     }
-    public Massege update(Massege massege,UserDao userDao, RoomDao roomDao){
-        massege.setDate(date);
-        massege.setTextMassege(textMassege);
+    public Messege update(Messege messege, UserDao userDao, RoomDao roomDao){
+        messege.setDate(date);
+        messege.setTextMessege(textMassege);
         Optional<User> user =userDao.findById(userId);
-        massege.setUser(user.get());      //????????
+        messege.setUser(user.get());      //????????
         Optional<Room> room = roomDao.findById(roomId);
-        massege.setRoom(room.get());
-        return massege;
+        messege.setRoom(room.get());
+        return messege;
     }
 
 }

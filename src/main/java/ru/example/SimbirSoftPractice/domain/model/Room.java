@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -32,6 +31,6 @@ public class Room {
     private List<User> users;
 
     @OneToMany(mappedBy = "room")
-    private List<Massege> masseges;
+    private List<Messege> messeges;
 
 }

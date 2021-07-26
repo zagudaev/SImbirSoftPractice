@@ -2,12 +2,8 @@ package ru.example.SimbirSoftPractice.domain.modelForm;
 
 import lombok.Data;
 import lombok.Getter;
-import ru.example.SimbirSoftPractice.domain.model.Massege;
 import ru.example.SimbirSoftPractice.domain.model.User;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 @Data

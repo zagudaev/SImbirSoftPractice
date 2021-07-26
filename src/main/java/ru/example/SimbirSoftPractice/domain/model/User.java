@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    private List<Massege> masseges;
+    private List<Messege> messeges;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

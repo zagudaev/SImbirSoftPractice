@@ -1,18 +1,19 @@
 package ru.example.SimbirSoftPractice.domain.modelForm;
 
-import ru.example.SimbirSoftPractice.domain.model.Massege;
+import lombok.Data;
+import lombok.Getter;
+import ru.example.SimbirSoftPractice.domain.model.Messege;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.model.User;
-import ru.example.SimbirSoftPractice.repository.MassegeDao;
+import ru.example.SimbirSoftPractice.repository.MessegeDao;
 import ru.example.SimbirSoftPractice.repository.UserDao;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Data
+@Getter
 public class RoomForm {
     private Long id;
     @NotBlank
@@ -25,15 +26,15 @@ public class RoomForm {
 
     private List<UserForm> users;
 
-    private List<MassegeForm> masseges;
+    private List<MessegeForm> massageForms;
 
 
-    public Room toRoom(UserDao userDao, MassegeDao massegeDao){
+    public Room toRoom(UserDao userDao, MessegeDao massegeDao){
         Room room = new Room();
         room = update(room,userDao,massegeDao);
         return room;
     }
-    public Room update(Room room,UserDao userDao, MassegeDao massegeDao){
+    public Room update(Room room,UserDao userDao, MessegeDao massegeDao){
         room.setName(name);
         room.setPrivat(privat);
         Optional<User> creator = userDao.findById(creatorId);
@@ -54,11 +55,11 @@ public class RoomForm {
 
         room.setUsers(users);
 
-        List<Massege> masseges = this.masseges
+        List<Messege> masseges = this.massageForms
                 .stream()
                 .filter(MassegeForm -> MassegeForm.getId() == null)
                 .map(p -> {
-                    Massege massege = new Massege();
+                    Messege massege = new Messege();
                     massege.setRoom(room);
                     massege.setId(p.getId());
                     massege.setDate(p.getDate());
@@ -67,7 +68,7 @@ public class RoomForm {
                     massegeDao.save(massege);
                     return massege;
                 }).collect(Collectors.toList());
-        room.setMasseges(masseges);
+        room.setMesseges(masseges);
 
         return room;
     }

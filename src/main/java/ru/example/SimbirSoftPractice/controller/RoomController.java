@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
+import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
 import ru.example.SimbirSoftPractice.servise.RoomServiceImpl;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class RoomController {
     private long update(@RequestBody RoomForm room){return  roomService.update(room);}
 
     @GetMapping("/all")
-    private List<Room> findAll () { return  roomService.findAll();}
+    private List<RoomVO> findAll () { return  roomService.findAll();}
 
     @DeleteMapping("/{id}")
-    private void delete(@PathVariable long id){ roomService.delete(id);}
+    private void delete(@PathVariable Long id){ roomService.delete(id);}
 }
