@@ -1,6 +1,7 @@
 package ru.example.SimbirSoftPractice.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.example.SimbirSoftPractice.domain.model.User;
@@ -20,13 +21,30 @@ public class UserController {
     private Long save (@RequestBody UserForm user){return userService.save(user);}
 
     @PutMapping("")
-    private long update(@RequestBody UserForm user){return  userService.update(user);}
+    private Long update(@RequestBody UserForm user){return  userService.update(user);}
 
     @GetMapping("/all")
     private List<UserVO> findAll () { return  userService.findAll();}
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR')")
     private void delete(@PathVariable Long id){ userService.delete(id);}
+
+    @PutMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
+    private  void  ban (@RequestBody UserForm user){ userService.ban(user);}
+
+    @PutMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
+    private  void  unBan (@RequestBody UserForm user){ userService.unBan(user);}
+
+    @PutMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN') ")
+    private  void  addModerator(@RequestBody UserForm user){userService.addModerator(user);}
+
+    @PutMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN') ")
+    private  void  deleteModerator(@RequestBody UserForm user){userService.addModerator(user);}
 
 
 }

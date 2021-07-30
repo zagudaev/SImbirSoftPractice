@@ -15,6 +15,11 @@ public interface UserService extends UserDetailsService {
     List<UserVO> findAll();
     User findByLogin(String login);
 
+    void ban(UserForm userForm);
+    void unBan (UserForm userForm);
+
+    void addModerator(UserForm userForm);
+    void deleteModerator(UserForm userForm);
 
 
 }

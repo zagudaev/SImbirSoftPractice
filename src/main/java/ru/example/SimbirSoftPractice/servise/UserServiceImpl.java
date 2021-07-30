@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Введите другое имя пользователя, данный login уже заня  : " + userForm.getLogin());
         }
         User user = userForm.toUser();
-        Role role = roleDao.findByName("user")
+        Role role = roleDao.findByName("ROLE_USER")
                 .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
         user.setRole(role);
         user.setPassword(bCryptPasswordEncoder().encode(user.getPassword()));
@@ -82,6 +83,48 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "User NOT FOUND"));
         return user;
     }
+
+    @Override
+    @Transactional
+    public void ban(UserForm userForm) {
+        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
+        user.setBan(true);
+        userDao.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void unBan(UserForm userForm) {
+        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
+        user.setBan(false);
+        userDao.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void addModerator(UserForm userForm) {
+        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
+        Role role = roleDao.findByName("ROLE_MODERATOR")
+                .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
+        user.setRole(role);
+        userDao.save(user);
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteModerator(UserForm userForm) {
+        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
+        Role role = roleDao.findByName("ROLE_USER")
+                .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
+        user.setRole(role);
+        userDao.save(user);
+    }
+
 
     @Override
     @Transactional(readOnly = true)

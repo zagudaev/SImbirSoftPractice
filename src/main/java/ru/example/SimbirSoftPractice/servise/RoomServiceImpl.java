@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.example.SimbirSoftPractice.domain.model.User;
+import ru.example.SimbirSoftPractice.domain.modelForm.UserForm;
 import ru.example.SimbirSoftPractice.util.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
@@ -25,7 +27,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public Long save(RoomForm roomForm) {
+    public Long savePublicRoom(RoomForm roomForm) {
         if (roomDao.findById(roomForm.getId()).orElse(null) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка создания комнты по id  : " + roomForm.getId() );
         }
@@ -67,5 +69,29 @@ public class RoomServiceImpl implements RoomService {
                 .stream()
                 .map(RoomVO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void addUser(RoomForm roomForm, UserForm userForm) {
+        Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
+        User user = userForm.toUser();
+        List<User> list = room.getUsers();
+        list.add(user);
+        room.setUsers(list);
+        roomDao.save(room);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(RoomForm roomForm, UserForm userForm) {
+        Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
+        User user = userForm.toUser();
+        List<User> list = room.getUsers();
+        list.remove(user);
+        room.setUsers(list);
+        roomDao.save(room);
     }
 }

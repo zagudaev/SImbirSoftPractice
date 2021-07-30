@@ -1,6 +1,7 @@
 package ru.example.SimbirSoftPractice.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.example.SimbirSoftPractice.domain.modelForm.MessegeForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.MassegeVO;
@@ -15,14 +16,17 @@ public class MessegeController {
     MessegeServiceImpl messegeService;
 
     @PostMapping("")
-    private Long save (@RequestBody MessegeForm massege){return messegeService.save(massege);}
+    @PreAuthorize("#messegeServiceImpl.findById(messegeForm.id).user.ban == false ") //TODO в spel-выражения я не уверен
+    private Long save (@RequestBody MessegeForm messegeForm){return messegeService.save(messegeForm);}
 
     @PutMapping("")
-    private long update(@RequestBody MessegeForm massege){return  messegeService.update(massege);}
+    private long update(@RequestBody MessegeForm messegeForm){return  messegeService.update(messegeForm);}
 
     @GetMapping("/all")
     private List<MassegeVO> findAll () { return  messegeService.findAll();}
 
+
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #messegeServiceImpl.findById(id).room.creator.id == authentication.principal.id")//TODO в spel-выражения я не уверен
     private void delete(@PathVariable Long id){ messegeService.delete(id);}
 }
