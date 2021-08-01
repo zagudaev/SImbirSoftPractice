@@ -18,25 +18,23 @@ import java.util.List;
 public class RoomController {
     RoomServiceImpl roomService;
     @PostMapping("")
-    @PreAuthorize("#roomServiceImpl.findById(room.id).creator.ban == false ") //TODO в spel-выражения я не уверен
-    private Long savePublicRoom (@RequestBody RoomForm room){return roomService.savePublicRoom(room);}
+    private Long save (@RequestBody RoomForm room){return roomService.save(room);}
 
     @PutMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomServiceImpl.findById(room.id).creator.id == authentication.principal.id")
+
     private long update(@RequestBody RoomForm room){return  roomService.update(room);}
 
     @GetMapping("/all")
     private List<RoomVO> findAll () { return  roomService.findAll();}
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomServiceImpl.findById(room.id).creator.id == authentication.principal.id") //TODO в spel-выражения я не уверен
     private void delete(@PathVariable Long id){ roomService.delete(id);}
 
-    @PutMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomServiceImpl.findById(room.id).creator.id == authentication.principal.id") //TODO в spel-выражения я не уверен
-    private void addUser(@RequestBody RoomForm roomForm, @RequestBody UserForm userForm){roomService.addUser(roomForm,userForm);}
+  //  @PutMapping("")
+  //
+  //  private void addUser(@RequestBody RoomForm roomForm, @RequestBody UserForm userForm){roomService.addUser(roomForm,userForm);}
 
-    @PutMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomServiceImpl.findById(room.id).creator.id == authentication.principal.id") //TODO в spel-выражения я не уверен
-    private void deleteUser(@RequestBody RoomForm roomForm, @RequestBody UserForm userForm){roomService.deleteUser(roomForm,userForm);}
+  //  @PutMapping("")
+  //
+  //  private void deleteUser(@RequestBody RoomForm roomForm, @RequestBody UserForm userForm){roomService.deleteUser(roomForm,userForm);}
 }

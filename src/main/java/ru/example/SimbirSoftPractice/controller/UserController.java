@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
-    private UserServiceImpl userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("")
     private Long save (@RequestBody UserForm user){return userService.save(user);}
@@ -27,24 +27,23 @@ public class UserController {
     private List<UserVO> findAll () { return  userService.findAll();}
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR')")
     private void delete(@PathVariable Long id){ userService.delete(id);}
 
-    @PutMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
-    private  void  ban (@RequestBody UserForm user){ userService.ban(user);}
+  //  @PutMapping("")
+  //
+  //  private  void  ban (@RequestBody UserForm user){ userService.ban(user);}
 
-    @PutMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
-    private  void  unBan (@RequestBody UserForm user){ userService.unBan(user);}
+ //  @PutMapping("")
+ //  @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
+ //  private  void  unBan (@RequestBody UserForm user){ userService.unBan(user);}
 
-    @PutMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') ")
-    private  void  addModerator(@RequestBody UserForm user){userService.addModerator(user);}
+  //  @PutMapping("")
+  //
+  //  private  void  addModerator(@RequestBody UserForm user){userService.addModerator(user);}
 
-    @PutMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') ")
-    private  void  deleteModerator(@RequestBody UserForm user){userService.addModerator(user);}
+  //  @PutMapping("")
+  //  @PreAuthorize("hasRole('ROLE_ADMIN') ")
+  //  private  void  deleteModerator(@RequestBody UserForm user){userService.addModerator(user);}
 
 
 }

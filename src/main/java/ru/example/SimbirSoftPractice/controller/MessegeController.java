@@ -16,7 +16,7 @@ public class MessegeController {
     MessegeServiceImpl messegeService;
 
     @PostMapping("")
-    @PreAuthorize("#messegeServiceImpl.findById(messegeForm.id).user.ban == false ") //TODO в spel-выражения я не уверен
+
     private Long save (@RequestBody MessegeForm messegeForm){return messegeService.save(messegeForm);}
 
     @PutMapping("")
@@ -27,6 +27,5 @@ public class MessegeController {
 
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #messegeServiceImpl.findById(id).room.creator.id == authentication.principal.id")//TODO в spel-выражения я не уверен
     private void delete(@PathVariable Long id){ messegeService.delete(id);}
 }

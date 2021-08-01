@@ -41,7 +41,7 @@ public class JpaConfig {
         adapter.setGenerateDdl(true);
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(adapter);
-        factory.setPackagesToScan("com");
+        factory.setPackagesToScan("ru");
         factory.setDataSource(dataSource());
         factory.setJpaPropertyMap(hibernateProperties);
         return factory;

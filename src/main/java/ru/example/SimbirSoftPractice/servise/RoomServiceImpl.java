@@ -2,6 +2,7 @@ package ru.example.SimbirSoftPractice.servise;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,7 +28,8 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public Long savePublicRoom(RoomForm roomForm) {
+    @PreAuthorize("#roomServiceImpl.findById(roomForm.id).creator.ban == false ") //TODO в spel-выражения я не уверен
+    public Long save(RoomForm roomForm) {
         if (roomDao.findById(roomForm.getId()).orElse(null) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка создания комнты по id  : " + roomForm.getId() );
         }
@@ -37,6 +39,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId== authentication.principal.id")
     public Long update(RoomForm roomForm) {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
@@ -47,6 +50,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomServiceImpl.findById(roomForm.id).creator.id == authentication.principal.id") //TODO в spel-выражения я не уверен
     public void delete(Long id) {
         Room room= roomDao.findById(id).orElseThrow(() ->
             new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + id));
@@ -73,6 +77,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomForm.creatorId== authentication.principal.id") //TODO в spel-выражения я не уверен
     public void addUser(RoomForm roomForm, UserForm userForm) {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
@@ -85,6 +90,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId== authentication.principal.id") //TODO в spel-выражения я не уверен
     public void deleteUser(RoomForm roomForm, UserForm userForm) {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));

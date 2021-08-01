@@ -2,6 +2,7 @@ package ru.example.SimbirSoftPractice.servise;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,6 +26,7 @@ public class MessegeServiceImpl implements MessegeService {
 
     @Override
     @Transactional
+    @PreAuthorize("#messegeServiceImpl.findById(messegeForm.id).user.ban == false ") //TODO в spel-выражения я не уверен
     public Long save(MessegeForm massegeForm) {
         if (messegeDao.findById(massegeForm.getId()).orElse(null) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка отправки сообщения  : " + massegeForm.getId() );
@@ -46,6 +48,7 @@ public class MessegeServiceImpl implements MessegeService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #messegeServiceImpl.findById(id).room.creator.id == authentication.principal.id")//TODO в spel-выражения я не уверен
     public void delete(Long id) {
         Messege massege= messegeDao.findById(id).orElseThrow(() ->
              new ResponseException(HttpStatus.BAD_REQUEST, "Не найден сообщение с ID = " + id));

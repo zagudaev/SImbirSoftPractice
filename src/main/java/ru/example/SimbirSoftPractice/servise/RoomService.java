@@ -9,7 +9,7 @@ import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
 import java.util.List;
 
 public interface RoomService {
-    Long savePublicRoom (RoomForm roomForm);
+    Long save (RoomForm roomForm);
     Long update (RoomForm roomForm);
     void delete (Long id);
 

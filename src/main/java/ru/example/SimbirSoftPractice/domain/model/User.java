@@ -39,6 +39,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Messege> messeges;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
