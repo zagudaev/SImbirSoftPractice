@@ -1,7 +1,6 @@
 package ru.example.SimbirSoftPractice.config;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,7 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.GenericFilterBean;
-import ru.example.SimbirSoftPractice.servise.UserService;
+import ru.example.SimbirSoftPractice.servise.ManService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -28,11 +27,11 @@ import java.io.IOException;
 @ComponentScan("ru")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserService userService;
+    private final ManService manService;
     private final ApplicationContext context;
 
-    public SecurityConfig(ApplicationContext context, UserService userService) {
-        this.userService = userService;
+    public SecurityConfig(ApplicationContext context, ManService manService) {
+        this.manService = manService;
         this.context = context;
     }
 
@@ -42,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
+        auth.userDetailsService(manService);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors()
                 .and()
                 .csrf().disable()
-                .addFilterBefore(new FilterToken(jwtConfig(), userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new FilterToken(jwtConfig(), manService), UsernamePasswordAuthenticationFilter.class)
                 .addFilter(authenticationVUFilter)
                 .addFilterBefore(new EncodingFilter(), ChannelProcessingFilter.class)
                 .authorizeRequests()

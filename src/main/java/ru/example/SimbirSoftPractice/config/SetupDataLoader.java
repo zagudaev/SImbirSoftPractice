@@ -8,23 +8,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.SimbirSoftPractice.domain.model.Role;
-import ru.example.SimbirSoftPractice.domain.model.User;
+import ru.example.SimbirSoftPractice.domain.model.Man;
 import ru.example.SimbirSoftPractice.repository.RoleDao;
-import ru.example.SimbirSoftPractice.repository.UserDao;
-
-import java.time.LocalDate;
+import ru.example.SimbirSoftPractice.repository.ManDao;
 
 @Component
 @RequiredArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final UserDao userDao;
+    private final ManDao manDao;
     private final RoleDao roleDao;
     private boolean alreadySetup = false;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private Role createRoleIfNotFound(String name) {
-        Role role = roleDao.findByName(name).orElse(null);
+        Role role;
+        role = roleDao.findByName(name).orElse(null);
         if (role == null) {
             role = new Role();
             role.setName(name);
@@ -40,14 +39,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createRoleIfNotFound("ROLE_USER");
         createRoleIfNotFound("ROLE_MODERATOR");
         Role roleAdmin = createRoleIfNotFound("ROLE_ADMIN");
-        User user = userDao.findByLogin("admin").orElse(null);
-        if (user == null) {
-            user = new User();
-            user.setLogin("admin");
-            user.setPassword(bCryptPasswordEncoder.encode("admin"));
-            user.setBan(false);
-            user.setRole(roleAdmin);
-            userDao.save(user);
+        Man man = manDao.findByLogin("admin").orElse(null);
+        if (man == null) {
+            man = new Man();
+            man.setLogin("admin");
+            man.setPassword(bCryptPasswordEncoder.encode("admin"));
+            man.setBan(false);
+            man.setRole(roleAdmin);
+            manDao.save(man);
         }
         alreadySetup = true;
     }

@@ -22,13 +22,13 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "id_creator")
-    private User creator;
+    private Man creator;
 
     private boolean privat;
 
 
     @ManyToMany
-    private List<User> users;
+    private List<Man> men;
 
     @OneToMany(mappedBy = "room")
     private List<Messege> messeges;

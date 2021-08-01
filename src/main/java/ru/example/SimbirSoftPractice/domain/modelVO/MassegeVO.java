@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import ru.example.SimbirSoftPractice.domain.model.Messege;
 import ru.example.SimbirSoftPractice.domain.model.Room;
-import ru.example.SimbirSoftPractice.domain.model.User;
+import ru.example.SimbirSoftPractice.domain.model.Man;
 
 import java.time.LocalDate;
 @Data
@@ -14,7 +14,7 @@ public class MassegeVO {
 
     private Room room;
 
-    private User user;
+    private Man man;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm a z")
     private LocalDate date;
@@ -27,7 +27,7 @@ public class MassegeVO {
         this.date = massege.getDate();
         this.textMessege = massege.getTextMessege();
         this.room = massege.getRoom();
-        this.user = massege.getUser();
+        this.man = massege.getMan();
     }
 
 }

@@ -28,7 +28,7 @@ public class JpaConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HashMap<String, String> hibernateProperties = new HashMap<>();
-//        hibernateProperties.put("hibernate.hbm2ddl.auto", "create-drop");
+  //      hibernateProperties.put("hibernate.hbm2ddl.auto", "create-drop");
         hibernateProperties.put("hibernate.hbm2ddl.auto", "update");
         hibernateProperties.put("hibernate.connection.driver_class", "org.postgresql.Driver");
         hibernateProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");

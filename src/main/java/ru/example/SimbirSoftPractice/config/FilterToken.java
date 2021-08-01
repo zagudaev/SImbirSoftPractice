@@ -1,8 +1,8 @@
 package ru.example.SimbirSoftPractice.config;
 
 
-import ru.example.SimbirSoftPractice.domain.model.User;
-import ru.example.SimbirSoftPractice.servise.UserService;
+import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.servise.ManService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,11 @@ public class FilterToken extends OncePerRequestFilter {
     @Autowired
     private final ru.example.SimbirSoftPractice.config.JwtConfig jwtConfig;
     @Autowired
-    private final UserService userService;
+    private final ManService manService;
 
-    public FilterToken(ru.example.SimbirSoftPractice.config.JwtConfig jwtConfig,UserService userService) {
+    public FilterToken(ru.example.SimbirSoftPractice.config.JwtConfig jwtConfig, ManService manService) {
         this.jwtConfig = jwtConfig;
-        this.userService = userService;
+        this.manService = manService;
     }
 
 
@@ -49,7 +49,7 @@ public class FilterToken extends OncePerRequestFilter {
             String username = claims.getSubject();
             List<LinkedHashMap> authoritiesMap = (List<LinkedHashMap>) claims.get("authorities");
             if (username != null) {
-                User user = userService.findByLogin(username);
+                Man man = manService.findByLogin(username);
                 if (authoritiesMap != null) {
                     List<SimpleGrantedAuthority> authorities = authoritiesMap
                             .stream().map(val -> {
@@ -59,7 +59,7 @@ public class FilterToken extends OncePerRequestFilter {
                             ).collect(Collectors.toList());
                     ;
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                            user, null, authorities
+                            man, null, authorities
                     );
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }

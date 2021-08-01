@@ -1,7 +1,6 @@
 package ru.example.SimbirSoftPractice.domain.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -21,5 +20,5 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private Collection<User> users;
+    private Collection<Man> men;
 }

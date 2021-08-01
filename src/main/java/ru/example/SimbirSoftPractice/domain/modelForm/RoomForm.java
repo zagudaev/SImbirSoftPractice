@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import ru.example.SimbirSoftPractice.domain.model.Messege;
 import ru.example.SimbirSoftPractice.domain.model.Room;
-import ru.example.SimbirSoftPractice.domain.model.User;
+import ru.example.SimbirSoftPractice.domain.model.Man;
 import ru.example.SimbirSoftPractice.repository.MessegeDao;
-import ru.example.SimbirSoftPractice.repository.UserDao;
+import ru.example.SimbirSoftPractice.repository.ManDao;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -24,36 +24,36 @@ public class RoomForm {
     private boolean privat;
 
 
-    private List<UserForm> users;
+    private List<ManForm> users;
 
     private List<MessegeForm> massageForms;
 
 
-    public Room toRoom(UserDao userDao, MessegeDao massegeDao){
+    public Room toRoom(ManDao manDao, MessegeDao massegeDao){
         Room room = new Room();
-        room = update(room,userDao,massegeDao);
+        room = update(room, manDao,massegeDao);
         return room;
     }
-    public Room update(Room room,UserDao userDao, MessegeDao massegeDao){
+    public Room update(Room room, ManDao manDao, MessegeDao massegeDao){
         room.setName(name);
         room.setPrivat(privat);
-        Optional<User> creator = userDao.findById(creatorId);
+        Optional<Man> creator = manDao.findById(creatorId);
         room.setCreator(creator.get());
-        List<User> users = this.users
+        List<Man> men = this.users
                 .stream()
                 .filter(UserForm -> UserForm.getId() == null)
                 .map(p -> {
-                    User user = new User();
-                    user.setId(p.getId());
-                    user.setLogin(p.getLogin());
-                    user.setPassword(p.getPassword());
-                    user.setUsername(p.getUsername());
-                    user.setBan(p.isBan());
-                    userDao.save(user);
-                    return user;
+                    Man man = new Man();
+                    man.setId(p.getId());
+                    man.setLogin(p.getLogin());
+                    man.setPassword(p.getPassword());
+                    man.setUsername(p.getUsername());
+                    man.setBan(p.isBan());
+                    manDao.save(man);
+                    return man;
                 }).collect(Collectors.toList());
 
-        room.setUsers(users);
+        room.setMen(men);
 
         List<Messege> masseges = this.massageForms
                 .stream()
@@ -63,8 +63,8 @@ public class RoomForm {
                     massege.setRoom(room);
                     massege.setId(p.getId());
                     massege.setDate(p.getDate());
-                    Optional<User> user = userDao.findById(p.getUserId());
-                    massege.setUser(user.get());
+                    Optional<Man> user = manDao.findById(p.getUserId());
+                    massege.setMan(user.get());
                     massegeDao.save(massege);
                     return massege;
                 }).collect(Collectors.toList());

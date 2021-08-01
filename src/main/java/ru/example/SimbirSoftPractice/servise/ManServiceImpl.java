@@ -12,39 +12,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.SimbirSoftPractice.util.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Role;
-import ru.example.SimbirSoftPractice.domain.model.User;
-import ru.example.SimbirSoftPractice.domain.modelForm.UserForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.UserVO;
+import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
+import ru.example.SimbirSoftPractice.domain.modelVO.ManVO;
 import ru.example.SimbirSoftPractice.repository.MessegeDao;
 import ru.example.SimbirSoftPractice.repository.RoleDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
-import ru.example.SimbirSoftPractice.repository.UserDao;
+import ru.example.SimbirSoftPractice.repository.ManDao;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class ManServiceImpl implements ManService {
     private final MessegeDao messegeDao;
-    private final UserDao userDao;
+    private final ManDao manDao;
     private final RoomDao roomDao;
     private  final RoleDao roleDao;
     @Override
     @Transactional
-    public Long save(UserForm userForm) {
-        if (userDao.findByLogin(userForm.getLogin()).orElse(null) != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Введите другое имя пользователя, данный login уже заня  : " + userForm.getLogin());
+    public Long save(ManForm manForm) {
+        if (manDao.findByLogin(manForm.getLogin()).orElse(null) != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Введите другое имя пользователя, данный login уже заня  : " + manForm.getLogin());
         }
-        User user = userForm.toUser();
+        Man man = manForm.toUser();
         Role role = roleDao.findByName("ROLE_USER")
                 .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
-        user.setRole(role);
-        user.setPassword(bCryptPasswordEncoder().encode(user.getPassword()));
-        return userDao.save(user).getId();
+        man.setRole(role);
+        man.setPassword(bCryptPasswordEncoder().encode(man.getPassword()));
+        return manDao.save(man).getId();
     }
     private BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -52,95 +51,95 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Long update(UserForm userForm) {
-        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
+    public Long update(ManForm manForm) {
+        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
 
-        user = userForm.update(user);
-        return userDao.save(user).getId();
+        man = manForm.update(man);
+        return manDao.save(man).getId();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR')")
     public void delete(Long id) {
-        User user= userDao.findById(id).orElseThrow(() ->
+        Man man = manDao.findById(id).orElseThrow(() ->
             new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + id));
-        userDao.deleteById(id);}
+        manDao.deleteById(id);}
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserVO> findAll() {
-        return userDao.findAll()
+    public List<ManVO> findAll() {
+        return manDao.findAll()
                 .stream()
-                .map(UserVO::new)
+                .map(ManVO::new)
                 .collect(Collectors.toList());
     }
 
 
     @Override
     @Transactional(readOnly = true)
-    public User findByLogin(String login) {
-        User user =  userDao.findByLogin(login)
+    public Man findByLogin(String login) {
+        Man man =  manDao.findByLogin(login)
                 .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "User NOT FOUND"));
-        return user;
+        return man;
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
-    public void ban(UserForm userForm) {
-        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
-        user.setBan(true);
-        userDao.save(user);
+    public void ban(ManForm manForm) {
+        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
+        man.setBan(true);
+        manDao.save(man);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
-    public void unBan(UserForm userForm) {
-        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
-        user.setBan(false);
-        userDao.save(user);
+    public void unBan(ManForm manForm) {
+        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
+        man.setBan(false);
+        manDao.save(man);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') ")
-    public void addModerator(UserForm userForm) {
-        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
+    public void addModerator(ManForm manForm) {
+        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
         Role role = roleDao.findByName("ROLE_MODERATOR")
                 .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
-        user.setRole(role);
-        userDao.save(user);
+        man.setRole(role);
+        manDao.save(man);
 
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') ")
-    public void deleteModerator(UserForm userForm) {
-        User user= userDao.findById(userForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + userForm.getId()));
+    public void deleteModerator(ManForm manForm) {
+        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
         Role role = roleDao.findByName("ROLE_USER")
                 .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
-        user.setRole(role);
-        userDao.save(user);
+        man.setRole(role);
+        manDao.save(man);
     }
 
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByLogin(username)
+        Man man = manDao.findByLogin(username)
                 .orElse(null);
-        if (user == null) return new org.springframework.security.core.userdetails.User(" ", " ", true, true, true, true,
+        if (man == null) return new org.springframework.security.core.userdetails.User(" ", " ", true, true, true, true,
                 getGrantedAuthorities("user"));
-        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), true, true, true, true,
-                getGrantedAuthorities(user.getRole().getName()));
+        return new org.springframework.security.core.userdetails.User(man.getLogin(), man.getPassword(), true, true, true, true,
+                getGrantedAuthorities(man.getRole().getName()));
     }
 
     private List<? extends GrantedAuthority> getGrantedAuthorities(String privilege) {

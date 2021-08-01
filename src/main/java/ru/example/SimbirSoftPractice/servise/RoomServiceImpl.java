@@ -6,15 +6,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import ru.example.SimbirSoftPractice.domain.model.User;
-import ru.example.SimbirSoftPractice.domain.modelForm.UserForm;
+import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
 import ru.example.SimbirSoftPractice.util.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
 import ru.example.SimbirSoftPractice.repository.MessegeDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
-import ru.example.SimbirSoftPractice.repository.UserDao;
+import ru.example.SimbirSoftPractice.repository.ManDao;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RoomServiceImpl implements RoomService {
     private final RoomDao roomDao;
-    private final UserDao userDao;
+    private final ManDao manDao;
     private final MessegeDao messegeDao;
 
     @Override
@@ -33,7 +33,7 @@ public class RoomServiceImpl implements RoomService {
         if (roomDao.findById(roomForm.getId()).orElse(null) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка создания комнты по id  : " + roomForm.getId() );
         }
-        Room room = roomForm.toRoom(userDao, messegeDao);
+        Room room = roomForm.toRoom(manDao, messegeDao);
         return roomDao.save(room).getId();
     }
 
@@ -44,7 +44,7 @@ public class RoomServiceImpl implements RoomService {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
 
-        room = roomForm.update(room,userDao, messegeDao);
+        room = roomForm.update(room, manDao, messegeDao);
         return roomDao.save(room).getId();
     }
 
@@ -78,26 +78,26 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomForm.creatorId== authentication.principal.id") //TODO в spel-выражения я не уверен
-    public void addUser(RoomForm roomForm, UserForm userForm) {
+    public void addUser(RoomForm roomForm, ManForm manForm) {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
-        User user = userForm.toUser();
-        List<User> list = room.getUsers();
-        list.add(user);
-        room.setUsers(list);
+        Man man = manForm.toUser();
+        List<Man> list = room.getMen();
+        list.add(man);
+        room.setMen(list);
         roomDao.save(room);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId== authentication.principal.id") //TODO в spel-выражения я не уверен
-    public void deleteUser(RoomForm roomForm, UserForm userForm) {
+    public void deleteUser(RoomForm roomForm, ManForm manForm) {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
-        User user = userForm.toUser();
-        List<User> list = room.getUsers();
-        list.remove(user);
-        room.setUsers(list);
+        Man man = manForm.toUser();
+        List<Man> list = room.getMen();
+        list.remove(man);
+        room.setMen(list);
         roomDao.save(room);
     }
 }

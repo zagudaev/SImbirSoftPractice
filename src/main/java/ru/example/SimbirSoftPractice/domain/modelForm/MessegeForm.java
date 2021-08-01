@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import ru.example.SimbirSoftPractice.domain.model.Messege;
 import ru.example.SimbirSoftPractice.domain.model.Room;
-import ru.example.SimbirSoftPractice.domain.model.User;
+import ru.example.SimbirSoftPractice.domain.model.Man;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
-import ru.example.SimbirSoftPractice.repository.UserDao;
+import ru.example.SimbirSoftPractice.repository.ManDao;
 
 
 import javax.validation.constraints.NotBlank;
@@ -27,16 +27,16 @@ public class MessegeForm {
     private LocalDate date;
 
 
-    public Messege toMessege(UserDao userDao, RoomDao roomDao){
+    public Messege toMessege(ManDao manDao, RoomDao roomDao){
         Messege messege = new Messege();
-        messege = update(messege,userDao,roomDao);
+        messege = update(messege, manDao,roomDao);
         return messege;
     }
-    public Messege update(Messege messege, UserDao userDao, RoomDao roomDao){
+    public Messege update(Messege messege, ManDao manDao, RoomDao roomDao){
         messege.setDate(date);
         messege.setTextMessege(textMassege);
-        Optional<User> user =userDao.findById(userId);
-        messege.setUser(user.get());      //????????
+        Optional<Man> user = manDao.findById(userId);
+        messege.setMan(user.get());      //????????
         Optional<Room> room = roomDao.findById(roomId);
         messege.setRoom(room.get());
         return messege;
