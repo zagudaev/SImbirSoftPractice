@@ -21,5 +21,6 @@ public interface ManService extends UserDetailsService {
     void addModerator(ManForm manForm);
     void deleteModerator(ManForm manForm);
 
+    void commandRename(ManForm manForm, String newUsername);
 
 }

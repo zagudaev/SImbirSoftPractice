@@ -1,5 +1,6 @@
 package ru.example.SimbirSoftPractice.servise;
 
+import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
 import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
@@ -10,6 +11,7 @@ public interface RoomService {
     Long save (RoomForm roomForm);
     Long update (RoomForm roomForm);
     void delete (Long id);
+    void commandUpdate (Room room);
 
     RoomVO findById(Long id);
 

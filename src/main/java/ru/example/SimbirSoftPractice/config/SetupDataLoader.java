@@ -9,8 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.SimbirSoftPractice.domain.model.Role;
 import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.repository.RoleDao;
 import ru.example.SimbirSoftPractice.repository.ManDao;
+import ru.example.SimbirSoftPractice.repository.RoomDao;
 
 @Component
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     private final ManDao manDao;
     private final RoleDao roleDao;
+    private  final RoomDao roomDao;
     private boolean alreadySetup = false;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -45,8 +48,17 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             man.setLogin("admin");
             man.setPassword(bCryptPasswordEncoder.encode("admin"));
             man.setBan(false);
+            man.setUsername("admin");
             man.setRole(roleAdmin);
             manDao.save(man);
+        }
+        Room room = roomDao.findByName("BOT").orElse(null);
+        if (room == null){
+            room = new Room();
+            room.setName("BOT");
+            room.setCreator(manDao.findByLogin("admin").get());
+            room.setMen(manDao.findAll());
+            roomDao.save(room);
         }
         alreadySetup = true;
     }

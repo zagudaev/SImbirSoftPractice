@@ -21,7 +21,7 @@ public class RoomVO {
 
     private List<ManVO> users;
 
-    private List<MassegeVO> messeges;
+    private List<MessegeVO> messeges;
 
     public RoomVO(Room room){
         this.id = room.getId();
@@ -39,11 +39,11 @@ public class RoomVO {
         }
 
         if (room.getMesseges().size() > 0){
-            List<MassegeVO> listVO = new ArrayList<>();
+            List<MessegeVO> listVO = new ArrayList<>();
             List<Messege> list = room.getMesseges();
             for (int i = 0; i <room.getMesseges().size() ; i++) {
-                MassegeVO massegeVO = new MassegeVO(list.get(i));
-                listVO.add(massegeVO);
+                MessegeVO messegeVO = new MessegeVO(list.get(i));
+                listVO.add(messegeVO);
             }
             this.messeges = listVO;
         }

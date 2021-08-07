@@ -112,7 +112,7 @@ public class ManServiceImpl implements ManService {
         Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
         Role role = roleDao.findByName("ROLE_MODERATOR")
-                .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
+                .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'ROLE_MODERATOR' FOUND"));
         man.setRole(role);
         manDao.save(man);
 
@@ -125,8 +125,17 @@ public class ManServiceImpl implements ManService {
         Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
         Role role = roleDao.findByName("ROLE_USER")
-                .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'USER' FOUND"));
+                .orElseThrow(() -> new ResponseException(HttpStatus.BAD_REQUEST, "Role NOT 'ROLE_USER' FOUND"));
         man.setRole(role);
+        manDao.save(man);
+    }
+
+    @Override
+    public void commandRename(ManForm manForm, String newUsername) {
+        Man man = manDao.findByLogin(manForm.getLogin()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с Login = " + manForm.getLogin()));
+
+        man.setUsername(newUsername);
         manDao.save(man);
     }
 

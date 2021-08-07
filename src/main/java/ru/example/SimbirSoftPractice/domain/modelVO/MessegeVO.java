@@ -8,7 +8,7 @@ import ru.example.SimbirSoftPractice.domain.model.Man;
 
 import java.time.LocalDate;
 @Data
-public class MassegeVO {
+public class MessegeVO {
 
     private Long id;
 
@@ -22,12 +22,12 @@ public class MassegeVO {
     private String textMessege;
 
 
-    public MassegeVO (Messege massege){
-        this.id = massege.getId();
-        this.date = massege.getDate();
-        this.textMessege = massege.getTextMessege();
-        this.room = massege.getRoom();
-        this.man = massege.getMan();
+    public MessegeVO(Messege messege){
+        this.id = messege.getId();
+        this.date = messege.getDate();
+        this.textMessege = messege.getTextMessege();
+        this.room = messege.getRoom();
+        this.man = messege.getMan();
     }
 
 }

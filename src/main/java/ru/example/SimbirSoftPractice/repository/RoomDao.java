@@ -8,4 +8,7 @@ import java.util.Optional;
 @Repository
 public interface RoomDao extends JpaRepository<Room, Long> {
     Optional<Room> findById (Long id);
+
+    Optional<Room> findByName (String name);
+
 }

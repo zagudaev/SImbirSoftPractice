@@ -50,6 +50,13 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId== authentication.principal.id")
+    public void commandUpdate(Room room) {
+         roomDao.save(room);
+    }
+
+    @Override
+    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomServiceImpl.findById(roomForm.id).creator.id == authentication.principal.id") //TODO в spel-выражения я не уверен
     public void delete(Long id) {
         Room room= roomDao.findById(id).orElseThrow(() ->
@@ -81,7 +88,8 @@ public class RoomServiceImpl implements RoomService {
     public void addUser(RoomForm roomForm, ManForm manForm) {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
-        Man man = manForm.toUser();
+        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
         List<Man> list = room.getMen();
         list.add(man);
         room.setMen(list);
@@ -90,11 +98,12 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId== authentication.principal.id") //TODO в spel-выражения я не уверен
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId == authentication.principal.id OR #manForm.id == authentication.principal.id") //TODO в spel-выражения я не уверен
     public void deleteUser(RoomForm roomForm, ManForm manForm) {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
-        Man man = manForm.toUser();
+        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
         List<Man> list = room.getMen();
         list.remove(man);
         room.setMen(list);

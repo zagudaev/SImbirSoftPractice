@@ -1,10 +1,9 @@
 package ru.example.SimbirSoftPractice.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.example.SimbirSoftPractice.domain.modelForm.MessegeForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.MassegeVO;
+import ru.example.SimbirSoftPractice.domain.modelVO.MessegeVO;
 import ru.example.SimbirSoftPractice.servise.MessegeServiceImpl;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class MessegeController {
     private long update(@RequestBody MessegeForm messegeForm){return  messegeService.update(messegeForm);}
 
     @GetMapping("/all")
-    private List<MassegeVO> findAll () { return  messegeService.findAll();}
+    private List<MessegeVO> findAll () { return  messegeService.findAll();}
 
 
     @DeleteMapping("/{id}")

@@ -10,5 +10,6 @@ public interface ManDao extends JpaRepository<Man, Long> {
     Optional<Man> findByLogin(String login);
 
     Optional<Man> findById (Long id);
+
 }
 

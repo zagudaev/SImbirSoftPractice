@@ -9,7 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.example.SimbirSoftPractice.util.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Messege;
 import ru.example.SimbirSoftPractice.domain.modelForm.MessegeForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.MassegeVO;
+import ru.example.SimbirSoftPractice.domain.modelVO.MessegeVO;
 import ru.example.SimbirSoftPractice.repository.MessegeDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
 import ru.example.SimbirSoftPractice.repository.ManDao;
@@ -59,19 +59,19 @@ public class MessegeServiceImpl implements MessegeService {
 
     @Override
     @Transactional(readOnly = true)
-    public MassegeVO findById(Long id) {
+    public MessegeVO findById(Long id) {
         Messege massege = messegeDao.findById(id).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден сообщение с ID = " + id));
-        MassegeVO massegeVO = new MassegeVO(massege);
-        return massegeVO;
+        MessegeVO messegeVO = new MessegeVO(massege);
+        return messegeVO;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<MassegeVO> findAll() {
+    public List<MessegeVO> findAll() {
         return messegeDao.findAll()
                 .stream()
-                .map(MassegeVO::new)
+                .map(MessegeVO::new)
                 .collect(Collectors.toList());
     }
 }
