@@ -15,7 +15,6 @@ public class MessegeController {
     MessegeServiceImpl messegeService;
 
     @PostMapping("")
-
     private Long save (@RequestBody MessegeForm messegeForm){return messegeService.save(messegeForm);}
 
     @PutMapping("")

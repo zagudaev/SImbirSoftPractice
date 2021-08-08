@@ -3,6 +3,7 @@ package ru.example.SimbirSoftPractice.servise;
 import com.sun.xml.internal.bind.annotation.XmlIsSet;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.example.SimbirSoftPractice.domain.modelForm.*;
@@ -28,6 +29,7 @@ public class BotServiceImpl implements BotService {
 
 
     @Override
+    @PreAuthorize("#messegeServiceImpl.findById(messegeForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
     public void messageАnalysis(MessegeForm messegeForm) {
         Messege messege = messegeForm.toMessege(manDao,roomDao);
         String[] command = messege.getTextMessege().split(" ");
@@ -119,20 +121,31 @@ public class BotServiceImpl implements BotService {
                         String newUserName = command[i];
                         manService.commandRename(manForm, newUserName);
                         break;
-                    case "ban":
-
+                    case "ban":         //user ban {login пользователя}// переделал команду
+                        i++;
+                        String loginban = command[i];
+                        ManForm manformban = null;
+                        manformban.setId(manDao.findByLogin(loginban).get().getId());
+                        manService.ban(manformban);
+                        break;
+                    case "unban":       //user unban {login пользователя}// добавил команду
+                        i++;
+                        String loginunban = command[i];
+                        ManForm manformunban = null;
+                        manformunban.setId(manDao.findByLogin(loginunban).get().getId());
+                        manService.unBan(manformunban);
                         break;
                     case "moderator":       //user rename {login пользователя} {Новый username} // переделал команду
                         i++;
-                        String login = command[i];
+                        String loginmoderator = command[i];
                         i++;
-                        ManForm manform = null;
+                        ManForm manformmoderator = null;
                         if (command[i].equals("-n")) {
-                            manform.setId(manDao.findByLogin(login).get().getId());
-                            manService.addModerator(manform);
+                            manformmoderator.setId(manDao.findByLogin(loginmoderator).get().getId());
+                            manService.addModerator(manformmoderator);
                         } else if (command[i].equals("-d")) {
-                            manform.setId(manDao.findByLogin(login).get().getId());
-                            manService.deleteModerator(manform);
+                            manformmoderator.setId(manDao.findByLogin(loginmoderator).get().getId());
+                            manService.deleteModerator(manformmoderator);
                         } else {
                             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка  команды. Посмотреть все команды //help");
                         }
@@ -141,6 +154,7 @@ public class BotServiceImpl implements BotService {
 
                 break;
             case "//yBoy":
+                  // TODO не смог разобратся с Youtube Api тестовый класс ApiTest находится в папке util
                 break;
             case "//help":
                 if (i == command.length) {
