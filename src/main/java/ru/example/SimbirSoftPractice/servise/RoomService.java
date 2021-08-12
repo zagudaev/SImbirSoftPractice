@@ -1,5 +1,6 @@
 package ru.example.SimbirSoftPractice.servise;
 
+import ru.example.SimbirSoftPractice.domain.model.Man;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
 import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
@@ -19,4 +20,5 @@ public interface RoomService {
 
     void addUser(RoomForm roomForm, ManForm manForm);
     void deleteUser(RoomForm roomForm, ManForm manForm);
+    public void deleteUserComand(Room room, Man man);
 }

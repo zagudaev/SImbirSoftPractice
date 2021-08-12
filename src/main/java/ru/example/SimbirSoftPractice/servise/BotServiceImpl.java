@@ -146,6 +146,21 @@ public class BotServiceImpl implements BotService {
                         ManForm manformban = null;
                         manformban.setId(manDao.findByLogin(loginban).get().getId());
                         manService.ban(manformban);
+                        if (i != command.length){
+                            i++;
+                            if(command[++i].equals("-l")){
+                                List<Room> roomList = roomDao.findAll();
+                                int idUserBan = Math.toIntExact(manDao.findByLogin(loginban).get().getId());
+                                for (Room room : roomList){
+                                    List<Man> manList = room.getMen();
+                                    for (Man man : manList){
+                                        if (man.getId() == idUserBan){
+                                            roomService.deleteUserComand(room,man);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         textRequestMessege += "ok";
                         break;
                     case "unban":       //user unban {login пользователя}// добавил команду

@@ -109,4 +109,10 @@ public class RoomServiceImpl implements RoomService {
         room.setMen(list);
         roomDao.save(room);
     }
+    public void deleteUserComand(Room room, Man man) {
+        List<Man> list = room.getMen();
+        list.remove(man);
+        room.setMen(list);
+        roomDao.save(room);
+    }
 }
