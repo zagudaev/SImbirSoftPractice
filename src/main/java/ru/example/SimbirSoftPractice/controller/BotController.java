@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.example.SimbirSoftPractice.domain.modelForm.MessegeForm;
+import ru.example.SimbirSoftPractice.domain.modelVO.MessegeVO;
 import ru.example.SimbirSoftPractice.servise.BotServiceImpl;
 
 @RestController
@@ -14,5 +15,5 @@ import ru.example.SimbirSoftPractice.servise.BotServiceImpl;
 public class BotController {
     BotServiceImpl botService;
     @PostMapping("")
-    private void messageАnalysis (@RequestBody MessegeForm messegeForm){ botService.messageАnalysis(messegeForm);}
+    private MessegeVO messageАnalysis (@RequestBody MessegeForm messegeForm){ return botService.messageАnalysis(messegeForm);}
 }

@@ -11,6 +11,7 @@ import ru.example.SimbirSoftPractice.domain.model.*;
 import ru.example.SimbirSoftPractice.domain.modelVO.*;
 import ru.example.SimbirSoftPractice.repository.ManDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
+import ru.example.SimbirSoftPractice.util.ApiTest;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -30,9 +32,18 @@ public class BotServiceImpl implements BotService {
 
     @Override
     @PreAuthorize("#messegeServiceImpl.findById(messegeForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
-    public void messageАnalysis(MessegeForm messegeForm) {
+    public MessegeVO messageАnalysis(MessegeForm messegeForm) {
         Messege messege = messegeForm.toMessege(manDao,roomDao);
         String[] command = messege.getTextMessege().split(" ");
+        ApiTest apiTest = new ApiTest();
+        Messege requestMessege = new Messege();
+        String textRequestMessege = "";
+        String channelName;
+        String videoName;
+        String videoId = "";
+        String viewCount = "";
+        String likeCount = "";
+        final String url = "https://www.youtube.com/watch?v=";
         int i = 0;
         switch (command[i]) {
             case "//room":
@@ -46,14 +57,16 @@ public class BotServiceImpl implements BotService {
                             roomForm.setName(command[i]);
                             roomForm.setPrivat(false);
                             roomService.save(roomForm);
+                            textRequestMessege += "ok";
                         } else if (command[++i].equals("-c")) {
                             RoomForm roomForm = new RoomForm();
                             roomForm.setCreatorId(messegeForm.getUserId());
                             roomForm.setName(command[i]);
                             roomForm.setPrivat(true);
                             roomService.save(roomForm);
+                            textRequestMessege += "ok";
                         } else {
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка  команды. Посмотреть все команды //help");
+                            textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
                         }
 
                         break;
@@ -61,6 +74,7 @@ public class BotServiceImpl implements BotService {
                         i++;
                         Long id = roomDao.findByName(command[i]).get().getId();
                         roomService.delete(id);
+                        textRequestMessege += "ok";
                         break;
                     case "rename":     //room rename {Текущее название комнаты} {Новое название комнаты} - переименование комнаты (владелец и админ);
                         i++;                                                            // переделал команду
@@ -68,7 +82,7 @@ public class BotServiceImpl implements BotService {
                         Room room = roomDao.findByName(command[i]).get();
                         room.setName(command[++i]);
                         roomService.commandUpdate(room);
-
+                        textRequestMessege += "ok";
                         break;
                     case "connect":
                         i++;
@@ -78,14 +92,16 @@ public class BotServiceImpl implements BotService {
                             ManForm manForm = null;
                             manForm.setId(messegeForm.getUserId());
                             roomService.addUser(roomForm, manForm);
+                            textRequestMessege += "ok";
                         } else if (command[i++].equals("-l")) {
                             RoomForm roomForm = null;
                             roomForm.setId(roomDao.findByName(command[i]).get().getId());
                             ManForm manForm = null;
                             manForm.setId(manDao.findByLogin(command[++i]).get().getId());
                             roomService.addUser(roomForm, manForm);
+                            textRequestMessege += "ok";
                         } else {
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка  команды. Посмотреть все команды //help");
+                            textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
                         }
                         break;
                     case "disconnect":
@@ -96,6 +112,7 @@ public class BotServiceImpl implements BotService {
                             ManForm manForm = null;
                             manForm.setId(messegeForm.getUserId());
                             roomService.deleteUser(roomForm, manForm);
+                            textRequestMessege += "ok";
                         } else if (command[i++].equals("-l")) {
                             RoomForm roomForm = null;
                             int roomNameIndex = i - 1;
@@ -103,12 +120,13 @@ public class BotServiceImpl implements BotService {
                             ManForm manForm = null;
                             manForm.setId(manDao.findByLogin(command[i++]).get().getId());
                             roomService.deleteUser(roomForm, manForm);
+                            textRequestMessege += "ok";
                         } else {
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка  команды. Посмотреть все команды //help");
+                            textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
                         }
                         break;
                     default:
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка  команды. Посмотреть все команды //help");
+                        textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
                 }
                 break;
             case "//user":
@@ -120,6 +138,7 @@ public class BotServiceImpl implements BotService {
                         i++;
                         String newUserName = command[i];
                         manService.commandRename(manForm, newUserName);
+                        textRequestMessege += "ok";
                         break;
                     case "ban":         //user ban {login пользователя}// переделал команду
                         i++;
@@ -127,6 +146,7 @@ public class BotServiceImpl implements BotService {
                         ManForm manformban = null;
                         manformban.setId(manDao.findByLogin(loginban).get().getId());
                         manService.ban(manformban);
+                        textRequestMessege += "ok";
                         break;
                     case "unban":       //user unban {login пользователя}// добавил команду
                         i++;
@@ -134,6 +154,7 @@ public class BotServiceImpl implements BotService {
                         ManForm manformunban = null;
                         manformunban.setId(manDao.findByLogin(loginunban).get().getId());
                         manService.unBan(manformunban);
+                        textRequestMessege += "ok";
                         break;
                     case "moderator":       //user rename {login пользователя} {Новый username} // переделал команду
                         i++;
@@ -143,35 +164,81 @@ public class BotServiceImpl implements BotService {
                         if (command[i].equals("-n")) {
                             manformmoderator.setId(manDao.findByLogin(loginmoderator).get().getId());
                             manService.addModerator(manformmoderator);
+                            textRequestMessege += "ok";
                         } else if (command[i].equals("-d")) {
                             manformmoderator.setId(manDao.findByLogin(loginmoderator).get().getId());
                             manService.deleteModerator(manformmoderator);
+                            textRequestMessege += "ok";
                         } else {
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка  команды. Посмотреть все команды //help");
+                            textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
                         }
                         break;
                 }
 
                 break;
             case "//yBoy":
-                  // TODO не смог разобратся с Youtube Api тестовый класс ApiTest находится в папке util
+                  i++;
+                  if (command[i].equals("find")){
+                      i++;
+                      if (command[i].equals("-k")){
+                          i++;
+                          if (command[i].equals("-l")){
+                              i++;
+                              channelName = command[i];
+                              if (command[++i].equals("||")){
+                                  i++;
+                                  videoName = command[i];
+                                  List<String> list = apiTest.GetVideo(channelName,videoName);
+                                  if (i == command.length){
+                                      videoId = list.get(0);
+
+                                  }else if(command[++i].equals("-v")){
+                                      viewCount = list.get(1);
+                                      if (i != command.length){
+                                          i++;
+                                          if(command[++i].equals("-l")){
+                                              likeCount = list.get(2);
+                                          }
+                                      }
+                                  }else if(command[++i].equals("-l")){
+                                      likeCount = list.get(2);
+                                      if (i != command.length){
+                                          if(command[++i].equals("-v")){
+                                              viewCount = list.get(1);
+                                          }
+                                      }
+                                } else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}
+
+                              }else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}
+
+                          }else{textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}
+
+                      }else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}//help
+
+                      textRequestMessege += url + videoId + "/n" + "Кол-во просмотров" + viewCount + "/n" + "Кол-во лайков" + likeCount;
+                  } else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}//help
+
                 break;
             case "//help":
                 if (i == command.length) {
                     try {
-                        RemoveCommands();
+                        textRequestMessege += RemoveCommands();
                     } catch (Exception e) {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка чтения файла");
                     }
                 }
                 break;
             default:
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка  команды. Посмотреть все команды //help");
+                textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
         }
 
+        requestMessege.setTextMessege(textRequestMessege);
+        requestMessege.setRoom(roomDao.findByName("BOT").get());
+        MessegeVO messegeVO = new MessegeVO(requestMessege);
+        return messegeVO;
     }
 
-    public MessegeVO RemoveCommands() throws Exception{
+    public String RemoveCommands() throws Exception{
         URL url = getClass().getResource("commands.txt");
         File file = new File(url.getPath());
         BufferedReader bufferedReader  = new BufferedReader(new FileReader(file));
@@ -181,13 +248,7 @@ public class BotServiceImpl implements BotService {
         while ((line = bufferedReader.readLine()) != null) {
             stringBuilder.append(line);
         }
-        Messege messege = new Messege();
-        LocalDate localDate = LocalDate.now();
-        messege.setDate(localDate);
-        messege.setRoom(roomDao.findByName("BOT").get());
-        messege.setTextMessege(stringBuilder.toString());
-        MessegeVO messegeVO = new MessegeVO(messege);
-        return messegeVO;
+        return line;
 
     }
 }
