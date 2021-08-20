@@ -26,18 +26,17 @@ public class UserController {
     @DeleteMapping("/{id}")
     private void delete(@PathVariable Long id){ userService.delete(id);}
 
-  //  @PutMapping("")
-  //  private  void  ban (@RequestBody UserForm user){ userService.ban(user);}
+    @PutMapping("/ban")
+    private  void  ban (@RequestBody ManForm user){ userService.ban(user);}
 
- //  @PutMapping("")
- //  private  void  unBan (@RequestBody UserForm user){ userService.unBan(user);}
+    @PutMapping("/unBan")
+    private  void  unBan (@RequestBody ManForm user){ userService.unBan(user);}
 
-  //  @PutMapping("")
-  //
-  //  private  void  addModerator(@RequestBody UserForm user){userService.addModerator(user);}
+     @PutMapping("/addModerator")
+     private  void  addModerator(@RequestBody ManForm user){userService.addModerator(user);}
 
-  //  @PutMapping("")
-  //  private  void  deleteModerator(@RequestBody UserForm user){userService.addModerator(user);}
+     @PutMapping("/deleteModerator")
+     private  void  deleteModerator(@RequestBody ManForm user){userService.addModerator(user);}
 
 
 }

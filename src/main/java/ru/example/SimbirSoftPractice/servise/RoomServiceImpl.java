@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.example.SimbirSoftPractice.domain.model.Man;
 import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
-import ru.example.SimbirSoftPractice.util.ResponseException;
+import ru.example.SimbirSoftPractice.exception.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;

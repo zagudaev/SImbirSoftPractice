@@ -1,6 +1,5 @@
 package ru.example.SimbirSoftPractice.servise;
 
-import com.sun.xml.internal.bind.annotation.XmlIsSet;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,14 +10,12 @@ import ru.example.SimbirSoftPractice.domain.model.*;
 import ru.example.SimbirSoftPractice.domain.modelVO.*;
 import ru.example.SimbirSoftPractice.repository.ManDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
-import ru.example.SimbirSoftPractice.util.ApiTest;
+import ru.example.SimbirSoftPractice.util.YoutubeApi;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -35,7 +32,7 @@ public class BotServiceImpl implements BotService {
     public MessegeVO messageАnalysis(MessegeForm messegeForm) {
         Messege messege = messegeForm.toMessege(manDao,roomDao);
         String[] command = messege.getTextMessege().split(" ");
-        ApiTest apiTest = new ApiTest();
+        YoutubeApi youtubeApi = new YoutubeApi();
         Messege requestMessege = new Messege();
         String textRequestMessege = "";
         String channelName;
@@ -193,7 +190,8 @@ public class BotServiceImpl implements BotService {
                 break;
             case "//yBoy":
                   i++;
-                  if (command[i].equals("find")){
+                switch (command[i]) {
+                    case "find":
                       i++;
                       if (command[i].equals("-k")){
                           i++;
@@ -203,7 +201,7 @@ public class BotServiceImpl implements BotService {
                               if (command[++i].equals("||")){
                                   i++;
                                   videoName = command[i];
-                                  List<String> list = apiTest.GetVideo(channelName,videoName);
+                                  List<String> list = youtubeApi.GetVideo(channelName,videoName);
                                   if (i == command.length){
                                       videoId = list.get(0);
 
@@ -231,7 +229,31 @@ public class BotServiceImpl implements BotService {
                       }else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}//help
 
                       textRequestMessege += url + videoId + "/n" + "Кол-во просмотров" + viewCount + "/n" + "Кол-во лайков" + likeCount;
-                  } else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}//help
+                      break;
+                    case "changelInfo" :
+                      i++;
+                      List<String> list = youtubeApi.GetChangellInfo(command[i]);
+                      textRequestMessege += "Имя канала" + list.get(0) + "/n"
+                              + list.get(1) + "/n"
+                              + list.get(2) + "/n"
+                              + list.get(3) + "/n"
+                              + list.get(4) + "/n"
+                              + list.get(5) + "/n";
+                              break;
+                    case "vidoCommentRanom" :
+                        i++;
+                        channelName = command[i];
+                        if (command[++i].equals("||")){
+                            i++;
+                            videoName = command[i];
+                            String comment = youtubeApi.GetvidoCommentRanom(channelName,videoName);
+                            textRequestMessege += comment;
+                        } else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}
+                        break;
+                    default:
+                        textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
+                }
+
 
                 break;
             case "//help":

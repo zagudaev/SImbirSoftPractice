@@ -1,4 +1,4 @@
-package ru.example.SimbirSoftPractice.util;
+package ru.example.SimbirSoftPractice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

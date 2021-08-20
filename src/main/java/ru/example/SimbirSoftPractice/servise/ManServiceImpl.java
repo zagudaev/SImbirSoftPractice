@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.example.SimbirSoftPractice.util.ResponseException;
+import ru.example.SimbirSoftPractice.exception.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Role;
 import ru.example.SimbirSoftPractice.domain.model.Man;
 import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;

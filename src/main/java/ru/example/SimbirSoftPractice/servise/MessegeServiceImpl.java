@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import ru.example.SimbirSoftPractice.util.ResponseException;
+import ru.example.SimbirSoftPractice.exception.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Messege;
 import ru.example.SimbirSoftPractice.domain.modelForm.MessegeForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.MessegeVO;

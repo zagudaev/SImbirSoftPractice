@@ -2,6 +2,7 @@ package ru.example.SimbirSoftPractice.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
 import ru.example.SimbirSoftPractice.servise.RoomServiceImpl;
@@ -26,11 +27,9 @@ public class RoomController {
     @DeleteMapping("/{id}")
     private void delete(@PathVariable Long id){ roomService.delete(id);}
 
-  //  @PutMapping("")
-  //
-  //  private void addUser(@RequestBody RoomForm roomForm, @RequestBody UserForm userForm){roomService.addUser(roomForm,userForm);}
+   @PutMapping("/add")
+   private void addUser(@RequestBody RoomForm roomForm, @RequestBody ManForm manForm){roomService.addUser(roomForm,manForm);}
 
-  //  @PutMapping("")
-  //
-  //  private void deleteUser(@RequestBody RoomForm roomForm, @RequestBody UserForm userForm){roomService.deleteUser(roomForm,userForm);}
+   @PutMapping("/delete")
+   private void deleteUser(@RequestBody RoomForm roomForm, @RequestBody ManForm manForm){roomService.deleteUser(roomForm,manForm);}
 }
