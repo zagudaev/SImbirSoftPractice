@@ -307,8 +307,9 @@ public class YoutubeApi {
                     List<CommentThread> videoComments = videoCommentsListResponse.getItems();
 
                     Random random = new Random();
-                    listResult.add(videoComments.get(random.nextInt(videoComments.size())).getSnippet().getTopLevelComment().getSnippet().getAuthorDisplayName());
-                    listResult.add(videoComments.get(random.nextInt(videoComments.size())).getSnippet().getTopLevelComment().getSnippet().getTextDisplay());
+                    int ingex = random.nextInt(videoComments.size());
+                    listResult.add(videoComments.get(ingex).getSnippet().getTopLevelComment().getSnippet().getAuthorDisplayName());
+                    listResult.add(videoComments.get(ingex).getSnippet().getTopLevelComment().getSnippet().getTextDisplay());
 
                 }
 
