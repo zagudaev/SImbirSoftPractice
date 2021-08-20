@@ -227,9 +227,9 @@ public class YoutubeApi {
 
         return listResult;
     }
-    public String GetvidoCommentRanom (String channelName,String videoName){
+    public List<String> GetvidoCommentRanom (String channelName,String videoName){
         String videoId = "";
-        String result = "";
+        List<String> listResult = new ArrayList();
 
         Properties properties = new Properties();
         try {
@@ -307,7 +307,8 @@ public class YoutubeApi {
                     List<CommentThread> videoComments = videoCommentsListResponse.getItems();
 
                     Random random = new Random();
-                    result = videoComments.get(random.nextInt(videoComments.size())).getSnippet().getTopLevelComment().getSnippet().getTextDisplay();
+                    listResult.add(videoComments.get(random.nextInt(videoComments.size())).getSnippet().getTopLevelComment().getSnippet().getAuthorDisplayName());
+                    listResult.add(videoComments.get(random.nextInt(videoComments.size())).getSnippet().getTopLevelComment().getSnippet().getTextDisplay());
 
                 }
 
@@ -325,7 +326,7 @@ public class YoutubeApi {
 
 
 
-        return result;
+        return listResult;
 
     }
 }

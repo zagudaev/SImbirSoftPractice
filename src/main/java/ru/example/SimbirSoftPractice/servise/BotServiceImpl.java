@@ -246,8 +246,8 @@ public class BotServiceImpl implements BotService {
                         if (command[++i].equals("||")){
                             i++;
                             videoName = command[i];
-                            String comment = youtubeApi.GetvidoCommentRanom(channelName,videoName);
-                            textRequestMessege += comment;
+                            List<String> comment = youtubeApi.GetvidoCommentRanom(channelName,videoName);
+                            textRequestMessege += comment.get(0) + "/n" + comment.get(1) ;
                         } else {textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";}
                         break;
                     default:
