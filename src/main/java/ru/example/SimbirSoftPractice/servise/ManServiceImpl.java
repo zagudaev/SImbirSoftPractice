@@ -15,7 +15,7 @@ import ru.example.SimbirSoftPractice.domain.model.Role;
 import ru.example.SimbirSoftPractice.domain.model.Man;
 import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.ManVO;
-import ru.example.SimbirSoftPractice.repository.MessegeDao;
+import ru.example.SimbirSoftPractice.repository.MessageDao;
 import ru.example.SimbirSoftPractice.repository.RoleDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
 import ru.example.SimbirSoftPractice.repository.ManDao;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ManServiceImpl implements ManService {
-    private final MessegeDao messegeDao;
+    private final MessageDao messageDao;
     private final ManDao manDao;
     private final RoomDao roomDao;
     private  final RoleDao roleDao;

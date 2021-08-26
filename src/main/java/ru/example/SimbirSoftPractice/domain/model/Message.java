@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Messege {
+public class Message {
     @Id
     @GeneratedValue
     private Long id;

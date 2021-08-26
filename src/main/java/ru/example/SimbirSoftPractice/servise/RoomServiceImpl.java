@@ -12,7 +12,7 @@ import ru.example.SimbirSoftPractice.exception.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
 import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
-import ru.example.SimbirSoftPractice.repository.MessegeDao;
+import ru.example.SimbirSoftPractice.repository.MessageDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
 import ru.example.SimbirSoftPractice.repository.ManDao;
 
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     private final RoomDao roomDao;
     private final ManDao manDao;
-    private final MessegeDao messegeDao;
+    private final MessageDao messageDao;
 
     @Override
     @Transactional
@@ -33,7 +33,7 @@ public class RoomServiceImpl implements RoomService {
         if (roomDao.findById(roomForm.getId()).orElse(null) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка создания комнты по id  : " + roomForm.getId() );
         }
-        Room room = roomForm.toRoom(manDao, messegeDao);
+        Room room = roomForm.toRoom(manDao, messageDao);
         return roomDao.save(room).getId();
     }
 
@@ -44,7 +44,7 @@ public class RoomServiceImpl implements RoomService {
         Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
 
-        room = roomForm.update(room, manDao, messegeDao);
+        room = roomForm.update(room, manDao, messageDao);
         return roomDao.save(room).getId();
     }
 

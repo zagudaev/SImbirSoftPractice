@@ -2,13 +2,13 @@ package ru.example.SimbirSoftPractice.domain.modelVO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import ru.example.SimbirSoftPractice.domain.model.Messege;
+import ru.example.SimbirSoftPractice.domain.model.Message;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.model.Man;
 
 import java.time.LocalDate;
 @Data
-public class MessegeVO {
+public class MessageVO {
 
     private Long id;
 
@@ -22,12 +22,12 @@ public class MessegeVO {
     private String textMessege;
 
 
-    public MessegeVO(Messege messege){
-        this.id = messege.getId();
-        this.date = messege.getDate();
-        this.textMessege = messege.getTextMessege();
-        this.room = messege.getRoom();
-        this.man = messege.getMan();
+    public MessageVO(Message message){
+        this.id = message.getId();
+        this.date = message.getDate();
+        this.textMessege = message.getTextMessege();
+        this.room = message.getRoom();
+        this.man = message.getMan();
     }
 
 }

@@ -37,7 +37,7 @@ public class Man implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "man")
-    private List<Messege> messeges;
+    private List<Message> messages;
 
 
     @Override

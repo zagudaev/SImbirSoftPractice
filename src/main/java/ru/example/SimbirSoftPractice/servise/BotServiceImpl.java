@@ -28,12 +28,12 @@ public class BotServiceImpl implements BotService {
 
 
     @Override
-    @PreAuthorize("#messegeServiceImpl.findById(messegeForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
-    public MessegeVO messageАnalysis(MessegeForm messegeForm) {
-        Messege messege = messegeForm.toMessege(manDao,roomDao);
-        String[] command = messege.getTextMessege().split(" ");
+    @PreAuthorize("#messageServiceImpl.findById(messageForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
+    public MessageVO messageАnalysis(MessageForm messageForm) {
+        Message message = messageForm.toMessege(manDao,roomDao);
+        String[] command = message.getTextMessege().split(" ");
         YoutubeApi youtubeApi = new YoutubeApi();
-        Messege requestMessege = new Messege();
+        Message requestMessage = new Message();
         String textRequestMessege = "";
         String channelName;
         String videoName;
@@ -50,14 +50,14 @@ public class BotServiceImpl implements BotService {
                         i++;
                         if (i == command.length) {
                             RoomForm roomForm = new RoomForm();
-                            roomForm.setCreatorId(messegeForm.getUserId());
+                            roomForm.setCreatorId(messageForm.getUserId());
                             roomForm.setName(command[i]);
                             roomForm.setPrivat(false);
                             roomService.save(roomForm);
                             textRequestMessege += "ok";
                         } else if (command[++i].equals("-c")) {
                             RoomForm roomForm = new RoomForm();
-                            roomForm.setCreatorId(messegeForm.getUserId());
+                            roomForm.setCreatorId(messageForm.getUserId());
                             roomForm.setName(command[i]);
                             roomForm.setPrivat(true);
                             roomService.save(roomForm);
@@ -87,7 +87,7 @@ public class BotServiceImpl implements BotService {
                             RoomForm roomForm = null;
                             roomForm.setId(roomDao.findByName(command[i]).get().getId());
                             ManForm manForm = null;
-                            manForm.setId(messegeForm.getUserId());
+                            manForm.setId(messageForm.getUserId());
                             roomService.addUser(roomForm, manForm);
                             textRequestMessege += "ok";
                         } else if (command[i++].equals("-l")) {
@@ -107,7 +107,7 @@ public class BotServiceImpl implements BotService {
                             RoomForm roomForm = null;
                             roomForm.setId(roomDao.findByName(command[i]).get().getId());
                             ManForm manForm = null;
-                            manForm.setId(messegeForm.getUserId());
+                            manForm.setId(messageForm.getUserId());
                             roomService.deleteUser(roomForm, manForm);
                             textRequestMessege += "ok";
                         } else if (command[i++].equals("-l")) {
@@ -269,10 +269,10 @@ public class BotServiceImpl implements BotService {
                 textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
         }
 
-        requestMessege.setTextMessege(textRequestMessege);
-        requestMessege.setRoom(roomDao.findByName("BOT").get());
-        MessegeVO messegeVO = new MessegeVO(requestMessege);
-        return messegeVO;
+        requestMessage.setTextMessege(textRequestMessege);
+        requestMessage.setRoom(roomDao.findByName("BOT").get());
+        MessageVO messageVO = new MessageVO(requestMessage);
+        return messageVO;
     }
 
     public String RemoveCommands() throws Exception{

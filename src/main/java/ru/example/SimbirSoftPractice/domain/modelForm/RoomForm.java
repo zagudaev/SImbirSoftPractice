@@ -2,10 +2,10 @@ package ru.example.SimbirSoftPractice.domain.modelForm;
 
 import lombok.Data;
 import lombok.Getter;
-import ru.example.SimbirSoftPractice.domain.model.Messege;
+import ru.example.SimbirSoftPractice.domain.model.Message;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.model.Man;
-import ru.example.SimbirSoftPractice.repository.MessegeDao;
+import ru.example.SimbirSoftPractice.repository.MessageDao;
 import ru.example.SimbirSoftPractice.repository.ManDao;
 
 import javax.validation.constraints.NotBlank;
@@ -26,15 +26,15 @@ public class RoomForm {
 
     private List<ManForm> users;
 
-    private List<MessegeForm> massageForms;
+    private List<MessageForm> massageForms;
 
 
-    public Room toRoom(ManDao manDao, MessegeDao massegeDao){
+    public Room toRoom(ManDao manDao, MessageDao massegeDao){
         Room room = new Room();
         room = update(room, manDao,massegeDao);
         return room;
     }
-    public Room update(Room room, ManDao manDao, MessegeDao massegeDao){
+    public Room update(Room room, ManDao manDao, MessageDao massegeDao){
         room.setName(name);
         room.setPrivat(privat);
         Optional<Man> creator = manDao.findById(creatorId);
@@ -55,11 +55,11 @@ public class RoomForm {
 
         room.setMen(men);
 
-        List<Messege> masseges = this.massageForms
+        List<Message> masseges = this.massageForms
                 .stream()
                 .filter(MassegeForm -> MassegeForm.getId() == null)
                 .map(p -> {
-                    Messege massege = new Messege();
+                    Message massege = new Message();
                     massege.setRoom(room);
                     massege.setId(p.getId());
                     massege.setDate(p.getDate());
@@ -68,7 +68,7 @@ public class RoomForm {
                     massegeDao.save(massege);
                     return massege;
                 }).collect(Collectors.toList());
-        room.setMesseges(masseges);
+        room.setMessages(masseges);
 
         return room;
     }

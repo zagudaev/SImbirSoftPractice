@@ -1,7 +1,7 @@
 package ru.example.SimbirSoftPractice.domain.modelVO;
 
 import lombok.Data;
-import ru.example.SimbirSoftPractice.domain.model.Messege;
+import ru.example.SimbirSoftPractice.domain.model.Message;
 import ru.example.SimbirSoftPractice.domain.model.Room;
 import ru.example.SimbirSoftPractice.domain.model.Man;
 
@@ -21,7 +21,7 @@ public class RoomVO {
 
     private List<ManVO> users;
 
-    private List<MessegeVO> messeges;
+    private List<MessageVO> messeges;
 
     public RoomVO(Room room){
         this.id = room.getId();
@@ -38,12 +38,12 @@ public class RoomVO {
             this.users = listVO;
         }
 
-        if (room.getMesseges().size() > 0){
-            List<MessegeVO> listVO = new ArrayList<>();
-            List<Messege> list = room.getMesseges();
-            for (int i = 0; i <room.getMesseges().size() ; i++) {
-                MessegeVO messegeVO = new MessegeVO(list.get(i));
-                listVO.add(messegeVO);
+        if (room.getMessages().size() > 0){
+            List<MessageVO> listVO = new ArrayList<>();
+            List<Message> list = room.getMessages();
+            for (int i = 0; i <room.getMessages().size() ; i++) {
+                MessageVO messageVO = new MessageVO(list.get(i));
+                listVO.add(messageVO);
             }
             this.messeges = listVO;
         }

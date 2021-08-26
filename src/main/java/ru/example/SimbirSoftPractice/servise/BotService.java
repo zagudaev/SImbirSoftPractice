@@ -1,8 +1,8 @@
 package ru.example.SimbirSoftPractice.servise;
 
-import ru.example.SimbirSoftPractice.domain.modelForm.MessegeForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.MessegeVO;
+import ru.example.SimbirSoftPractice.domain.modelForm.MessageForm;
+import ru.example.SimbirSoftPractice.domain.modelVO.MessageVO;
 
 public interface BotService {
-    MessegeVO messageАnalysis(MessegeForm messegeForm) ;
+    MessageVO messageАnalysis(MessageForm messageForm) ;
 }
