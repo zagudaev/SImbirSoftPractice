@@ -37,11 +37,11 @@ public class RoomForm {
     public Room update(Room room, ManDao manDao, MessageDao massegeDao){
         room.setName(name);
         room.setPrivat(privat);
-        Optional<Man> creator = manDao.findById(creatorId);
-        room.setCreator(creator.get());
+        Man creator = manDao.findById(creatorId).orElse(null);;
+        room.setCreator(creator);
         List<Man> men = this.users
                 .stream()
-                .filter(UserForm -> UserForm.getId() == null)
+                .filter(UserForm -> UserForm.getId() != null)
                 .map(p -> {
                     Man man = new Man();
                     man.setId(p.getId());
@@ -57,7 +57,7 @@ public class RoomForm {
 
         List<Message> masseges = this.massageForms
                 .stream()
-                .filter(MassegeForm -> MassegeForm.getId() == null)
+                .filter(MassegeForm -> MassegeForm.getId() != null)
                 .map(p -> {
                     Message massege = new Message();
                     massege.setRoom(room);

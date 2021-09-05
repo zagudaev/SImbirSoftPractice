@@ -18,7 +18,7 @@ public class ManVO {
 
     private boolean ban;
 
-    private Role role;
+    private RoleVO role;
 
     public ManVO(Man man){
         this.id = man.getId();
@@ -26,7 +26,7 @@ public class ManVO {
         this.password = man.getPassword();
         this.username = man.getUsername();
         this.ban = man.isBan();
-        this.role = man.getRole();
+        this.role = new RoleVO(man.getRole());
 
     }
 

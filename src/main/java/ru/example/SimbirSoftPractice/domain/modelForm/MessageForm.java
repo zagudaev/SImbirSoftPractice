@@ -23,7 +23,7 @@ public class MessageForm {
     @NotBlank
     private String textMassege;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm a z")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private LocalDate date;
 
 
@@ -34,11 +34,11 @@ public class MessageForm {
     }
     public Message update(Message message, ManDao manDao, RoomDao roomDao){
         message.setDate(date);
-        message.setTextMessege(textMassege);
-        Optional<Man> user = manDao.findById(userId);
-        message.setMan(user.get());      //????????
-        Optional<Room> room = roomDao.findById(roomId);
-        message.setRoom(room.get());
+        message.setTextMessage(textMassege);
+        Man user = manDao.findById(userId).orElse(null);
+        message.setMan(user);
+        Room room = roomDao.findById(roomId).orElse(null);
+        message.setRoom(room);
         return message;
     }
 

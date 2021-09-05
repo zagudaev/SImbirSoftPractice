@@ -7,7 +7,6 @@ import ru.example.SimbirSoftPractice.domain.model.Man;
 import javax.validation.constraints.NotBlank;
 
 @Data
-@Getter
 public class ManForm {
     private Long id;
     @NotBlank

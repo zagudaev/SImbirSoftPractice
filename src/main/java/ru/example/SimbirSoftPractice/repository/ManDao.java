@@ -11,5 +11,7 @@ public interface ManDao extends JpaRepository<Man, Long> {
 
     Optional<Man> findById (Long id);
 
+    void deleteById (Long id);
+
 }
 

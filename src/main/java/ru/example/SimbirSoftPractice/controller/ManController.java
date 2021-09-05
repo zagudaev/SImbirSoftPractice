@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
-public class UserController {
+public class ManController {
     private final ManServiceImpl userService;
 
     @PostMapping("")
@@ -36,7 +36,7 @@ public class UserController {
      private  void  addModerator(@RequestBody ManForm user){userService.addModerator(user);}
 
      @PutMapping("/deleteModerator")
-     private  void  deleteModerator(@RequestBody ManForm user){userService.addModerator(user);}
+     private  void  deleteModerator(@RequestBody ManForm user){userService.deleteModerator(user);}
 
 
 }

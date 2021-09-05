@@ -30,5 +30,5 @@ public class Message {
     private LocalDate date;
 
     @Column(length = 500)
-    private String textMessege;
+    private String textMessage;
 }

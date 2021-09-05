@@ -26,11 +26,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    @PreAuthorize("#messageServiceImpl.findById(messegeForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
+    //@PreAuthorize("#messageServiceImpl.findById(messegeForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
     public MessageVO save(MessageForm massegeForm) {
-        if (messageDao.findById(massegeForm.getId()).orElse(null) != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка отправки сообщения  : " + massegeForm.getId() );
-            }
         Message message = massegeForm.toMessege(manDao,roomDao);
         messageDao.save(message);
         return new MessageVO(message);
@@ -50,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #messageServiceImpl.findById(id).room.creator.id == authentication.principal.id")//TODO в spel-выражения я не уверен
+    //@PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #messageServiceImpl.findById(id).room.creator.id == authentication.principal.id")//TODO в spel-выражения я не уверен
     public void delete(Long id) {
         Message massege= messageDao.findById(id).orElseThrow(() ->
              new ResponseException(HttpStatus.BAD_REQUEST, "Не найден сообщение с ID = " + id));

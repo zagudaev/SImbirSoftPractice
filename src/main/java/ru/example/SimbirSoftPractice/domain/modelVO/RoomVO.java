@@ -15,7 +15,7 @@ public class RoomVO {
 
     private String name;
 
-    private Man creator;
+    private ManVO creator;
 
     private boolean privat;
 
@@ -26,7 +26,7 @@ public class RoomVO {
     public RoomVO(Room room){
         this.id = room.getId();
         this.name = room.getName();
-        this.creator = room.getCreator();
+        this.creator = new ManVO(room.getCreator());
         this.privat = room.isPrivat();
         if (room.getMen().size() > 0){
             List<ManVO> listVO = new ArrayList<>();

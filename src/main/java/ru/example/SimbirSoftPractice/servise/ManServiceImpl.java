@@ -21,6 +21,7 @@ import ru.example.SimbirSoftPractice.repository.RoomDao;
 import ru.example.SimbirSoftPractice.repository.ManDao;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class ManServiceImpl implements ManService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR')")
     public void delete(Long id) {
         Man man = manDao.findById(id).orElseThrow(() ->
             new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + id));
@@ -70,10 +71,14 @@ public class ManServiceImpl implements ManService {
     @Override
     @Transactional(readOnly = true)
     public List<ManVO> findAll() {
+
+
         return manDao.findAll()
-                .stream()
-                .map(ManVO::new)
-                .collect(Collectors.toList());
+              .stream()
+              .map(ManVO::new)
+              .collect(Collectors.toList());
+
+
     }
 
 
@@ -87,7 +92,7 @@ public class ManServiceImpl implements ManService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
+    //@PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
     public void ban(ManForm manForm) {
         Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
@@ -97,7 +102,7 @@ public class ManServiceImpl implements ManService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
+    //@PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') ")
     public void unBan(ManForm manForm) {
         Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
@@ -107,7 +112,7 @@ public class ManServiceImpl implements ManService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') ")
+   // @PreAuthorize("hasRole('ROLE_ADMIN') ")
     public void addModerator(ManForm manForm) {
         Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
@@ -120,7 +125,7 @@ public class ManServiceImpl implements ManService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') ")
+    //@PreAuthorize("hasRole('ROLE_ADMIN') ")
     public void deleteModerator(ManForm manForm) {
         Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));

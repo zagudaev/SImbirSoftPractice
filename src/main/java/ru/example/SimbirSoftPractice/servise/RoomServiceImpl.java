@@ -28,9 +28,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    @PreAuthorize("#roomServiceImpl.findById(roomForm.id).creator.ban == false ") //TODO в spel-выражения я не уверен
+    //@PreAuthorize("#manDao.findById(roomForm.creatorId).get().ban == false") //TODO в spel-выражения я не уверен
     public Long save(RoomForm roomForm) {
-        if (roomDao.findById(roomForm.getId()).orElse(null) != null){
+        if (roomDao.findByName(roomForm.getName()).orElse(null) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка создания комнты по id  : " + roomForm.getId() );
         }
         Room room = roomForm.toRoom(manDao, messageDao);

@@ -12,9 +12,9 @@ public class MessageVO {
 
     private Long id;
 
-    private Room room;
+    private RoomVO room;
 
-    private Man man;
+    private ManVO man;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm a z")
     private LocalDate date;
@@ -25,9 +25,9 @@ public class MessageVO {
     public MessageVO(Message message){
         this.id = message.getId();
         this.date = message.getDate();
-        this.textMessege = message.getTextMessege();
-        this.room = message.getRoom();
-        this.man = message.getMan();
+        this.textMessege = message.getTextMessage();
+        this.room = new RoomVO(message.getRoom());
+        this.man = new ManVO(message.getMan());
     }
 
 }

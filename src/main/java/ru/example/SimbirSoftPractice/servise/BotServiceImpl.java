@@ -31,7 +31,7 @@ public class BotServiceImpl implements BotService {
     @PreAuthorize("#messageServiceImpl.findById(messageForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
     public MessageVO messageАnalysis(MessageForm messageForm) {
         Message message = messageForm.toMessege(manDao,roomDao);
-        String[] command = message.getTextMessege().split(" ");
+        String[] command = message.getTextMessage().split(" ");
         YoutubeApi youtubeApi = new YoutubeApi();
         Message requestMessage = new Message();
         String textRequestMessege = "";
@@ -269,7 +269,7 @@ public class BotServiceImpl implements BotService {
                 textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
         }
 
-        requestMessage.setTextMessege(textRequestMessege);
+        requestMessage.setTextMessage(textRequestMessege);
         requestMessage.setRoom(roomDao.findByName("BOT").get());
         MessageVO messageVO = new MessageVO(requestMessage);
         return messageVO;
