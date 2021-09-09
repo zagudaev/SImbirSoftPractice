@@ -1,8 +1,8 @@
 package ru.example.SimbirSoftPractice.config;
 
 
-import ru.example.SimbirSoftPractice.domain.model.Man;
-import ru.example.SimbirSoftPractice.servise.ManService;
+import ru.example.SimbirSoftPractice.domain.model.Men;
+import ru.example.SimbirSoftPractice.servise.MenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,11 @@ public class FilterToken extends OncePerRequestFilter {
     @Autowired
     private final ru.example.SimbirSoftPractice.config.JwtConfig jwtConfig;
     @Autowired
-    private final ManService manService;
+    private final MenService menService;
 
-    public FilterToken(ru.example.SimbirSoftPractice.config.JwtConfig jwtConfig, ManService manService) {
+    public FilterToken(ru.example.SimbirSoftPractice.config.JwtConfig jwtConfig, MenService menService) {
         this.jwtConfig = jwtConfig;
-        this.manService = manService;
+        this.menService = menService;
     }
 
 
@@ -49,7 +49,7 @@ public class FilterToken extends OncePerRequestFilter {
             String username = claims.getSubject();
             List<LinkedHashMap> authoritiesMap = (List<LinkedHashMap>) claims.get("authorities");
             if (username != null) {
-                Man man = manService.findByLogin(username);
+                Men men = menService.findByLogin(username);
                 if (authoritiesMap != null) {
                     List<SimpleGrantedAuthority> authorities = authoritiesMap
                             .stream().map(val -> {
@@ -59,7 +59,7 @@ public class FilterToken extends OncePerRequestFilter {
                             ).collect(Collectors.toList());
                     ;
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                            man, null, authorities
+                            men, null, authorities
                     );
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }

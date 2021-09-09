@@ -1,24 +1,23 @@
 package ru.example.SimbirSoftPractice.servise;
 
-import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.domain.model.Men;
 import ru.example.SimbirSoftPractice.domain.model.Room;
-import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
-import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
+import ru.example.SimbirSoftPractice.domain.modelDTO.MenDTO;
+import ru.example.SimbirSoftPractice.domain.modelDTO.RoomDTO;
 
 import java.util.List;
 
 public interface RoomService {
-    Long save (RoomForm roomForm);
-    Long update (RoomForm roomForm);
+    Long save (RoomDTO roomDTO);
+    Long update (RoomDTO roomDTO);
     void delete (Long id);
     void commandUpdate (Room room);
 
-    RoomVO findById(Long id);
+    RoomDTO findById(Long id);
 
-    List<RoomVO> findAll();
+    List<RoomDTO> findAll();
 
-    void addUser(RoomForm roomForm, ManForm manForm);
-    void deleteUser(RoomForm roomForm, ManForm manForm);
-    public void deleteUserComand(Room room, Man man);
+    void addUser(RoomDTO roomDTO, MenDTO menDTO);
+    void deleteUser(RoomDTO roomDTO, MenDTO menDTO);
+    public void deleteUserComand(Room room, Men men);
 }

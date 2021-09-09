@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
-import ru.example.SimbirSoftPractice.domain.model.Message;
-import ru.example.SimbirSoftPractice.domain.modelForm.MessageForm;
+import ru.example.SimbirSoftPractice.domain.modelDTO.MessageDTO;
 import ru.example.SimbirSoftPractice.domain.modelVO.MessageVO;
 import ru.example.SimbirSoftPractice.servise.MessageServiceImpl;
 
@@ -18,13 +17,13 @@ public class MessageController {
     MessageServiceImpl messageService;
 
     @PostMapping("")
-    private MessageVO save (@RequestBody MessageForm messageForm){return messageService.save(messageForm);}
+    private MessageDTO save (@RequestBody MessageDTO messageDTO){return messageService.save(messageDTO);}
 
     @PutMapping("")
-    private MessageVO update(@RequestBody MessageForm messageForm){return  messageService.update(messageForm);}
+    private MessageDTO update(@RequestBody MessageDTO messageDTO){return  messageService.update(messageDTO);}
 
     @GetMapping("/all")
-    private List<MessageVO> findAll () { return  messageService.findAll();}
+    private List<MessageDTO> findAll () { return  messageService.findAll();}
 
 
     @DeleteMapping("/{id}")
@@ -33,7 +32,7 @@ public class MessageController {
 
     @MessageMapping("/changeMessage")
     @SendTo("/topic/activity")
-    public MessageVO change(MessageForm messageForm) {
-        return  messageService.change(messageForm);
+    public MessageDTO change(MessageDTO messageDTO) {
+        return  messageService.change(messageDTO);
     }
 }

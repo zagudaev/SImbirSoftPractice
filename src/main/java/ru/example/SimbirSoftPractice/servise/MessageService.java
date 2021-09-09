@@ -1,16 +1,16 @@
 package ru.example.SimbirSoftPractice.servise;
 
-import ru.example.SimbirSoftPractice.domain.modelForm.MessageForm;
+import ru.example.SimbirSoftPractice.domain.modelDTO.MessageDTO;
 import ru.example.SimbirSoftPractice.domain.modelVO.MessageVO;
 
 import java.util.List;
 
 public interface MessageService {
-    MessageVO save (MessageForm messege);
-    MessageVO update (MessageForm messege);
+    MessageDTO save (MessageDTO messege);
+    MessageDTO update (MessageDTO messege);
     void delete (Long id);
-    MessageVO findById(Long id);
+    MessageDTO findById(Long id);
 
-    List<MessageVO> findAll();
-    MessageVO change(MessageForm messageForm);
+    List<MessageDTO> findAll();
+    MessageDTO change(MessageDTO messageDTO);
 }

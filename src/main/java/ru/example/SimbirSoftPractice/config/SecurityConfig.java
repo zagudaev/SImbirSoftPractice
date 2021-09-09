@@ -14,7 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.GenericFilterBean;
-import ru.example.SimbirSoftPractice.servise.ManService;
+import ru.example.SimbirSoftPractice.servise.MenService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,11 +27,11 @@ import java.io.IOException;
 @ComponentScan("ru")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final ManService manService;
+    private final MenService menService;
     private final ApplicationContext context;
 
-    public SecurityConfig(ApplicationContext context, ManService manService) {
-        this.manService = manService;
+    public SecurityConfig(ApplicationContext context, MenService menService) {
+        this.menService = menService;
         this.context = context;
     }
 
@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(manService);
+        auth.userDetailsService(menService);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors()
                 .and()
                 .csrf().disable()
-                .addFilterBefore(new FilterToken(jwtConfig(), manService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new FilterToken(jwtConfig(), menService), UsernamePasswordAuthenticationFilter.class)
                 .addFilter(authenticationVUFilter)
                 .addFilterBefore(new EncodingFilter(), ChannelProcessingFilter.class)
                 .authorizeRequests()

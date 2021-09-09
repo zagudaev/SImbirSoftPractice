@@ -3,8 +3,6 @@ package ru.example.SimbirSoftPractice.domain.modelVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import ru.example.SimbirSoftPractice.domain.model.Message;
-import ru.example.SimbirSoftPractice.domain.model.Room;
-import ru.example.SimbirSoftPractice.domain.model.Man;
 
 import java.time.LocalDate;
 @Data
@@ -27,7 +25,7 @@ public class MessageVO {
         this.date = message.getDate();
         this.textMessege = message.getTextMessage();
         this.room = new RoomVO(message.getRoom());
-        this.man = new ManVO(message.getMan());
+        this.man = new ManVO(message.getMen());
     }
 
 }

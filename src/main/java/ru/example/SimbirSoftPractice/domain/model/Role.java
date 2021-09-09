@@ -20,5 +20,5 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private Collection<Man> men;
+    private Collection<Men> men;
 }

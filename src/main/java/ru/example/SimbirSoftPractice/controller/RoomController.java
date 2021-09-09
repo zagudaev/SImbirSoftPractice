@@ -2,9 +2,8 @@ package ru.example.SimbirSoftPractice.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
-import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
+import ru.example.SimbirSoftPractice.domain.modelDTO.MenDTO;
+import ru.example.SimbirSoftPractice.domain.modelDTO.RoomDTO;
 import ru.example.SimbirSoftPractice.servise.RoomServiceImpl;
 
 import java.util.List;
@@ -15,21 +14,21 @@ import java.util.List;
 public class RoomController {
     RoomServiceImpl roomService;
     @PostMapping("")
-    private Long save (@RequestBody RoomForm room){return roomService.save(room);}
+    private Long save (@RequestBody RoomDTO room){return roomService.save(room);}
 
     @PutMapping("")
 
-    private long update(@RequestBody RoomForm room){return  roomService.update(room);}
+    private long update(@RequestBody RoomDTO room){return  roomService.update(room);}
 
     @GetMapping("/all")
-    private List<RoomVO> findAll () { return  roomService.findAll();}
+    private List<RoomDTO> findAll () { return  roomService.findAll();}
 
     @DeleteMapping("/{id}")
     private void delete(@PathVariable Long id){ roomService.delete(id);}
 
    @PutMapping("/add")
-   private void addUser(@RequestBody RoomForm roomForm, @RequestBody ManForm manForm){roomService.addUser(roomForm,manForm);}
+   private void addUser(@RequestBody RoomDTO roomDTO, @RequestBody MenDTO menDTO){roomService.addUser(roomDTO, menDTO);}
 
    @PutMapping("/delete")
-   private void deleteUser(@RequestBody RoomForm roomForm, @RequestBody ManForm manForm){roomService.deleteUser(roomForm,manForm);}
+   private void deleteUser(@RequestBody RoomDTO roomDTO, @RequestBody MenDTO menDTO){roomService.deleteUser(roomDTO, menDTO);}
 }

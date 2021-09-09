@@ -11,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.domain.model.Men;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -36,11 +36,11 @@ public class BasicAuthenticationVUFilter extends UsernamePasswordAuthenticationF
             throws AuthenticationException {
 
         try {
-            Man man = new ObjectMapper().readValue(request.getInputStream(), Man.class);
+            Men men = new ObjectMapper().readValue(request.getInputStream(), Men.class);
 
             // 2. Create auth object (contains credentials) which will be used by auth manager
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    man.getLogin(), man.getPassword(), Collections.emptyList());
+                    men.getLogin(), men.getPassword(), Collections.emptyList());
             return authManager.authenticate(authToken);
         } catch (IOException e) {
             SecurityContextHolder.clearContext();

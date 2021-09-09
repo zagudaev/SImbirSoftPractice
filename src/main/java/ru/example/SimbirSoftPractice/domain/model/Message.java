@@ -24,7 +24,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn
-    private Man man;
+    private Men men;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm a z")
     private LocalDate date;

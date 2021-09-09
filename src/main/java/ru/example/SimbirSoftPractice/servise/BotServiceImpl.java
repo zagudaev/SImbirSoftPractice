@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.example.SimbirSoftPractice.domain.modelForm.*;
+import ru.example.SimbirSoftPractice.domain.modelDTO.*;
 import ru.example.SimbirSoftPractice.domain.model.*;
-import ru.example.SimbirSoftPractice.domain.modelVO.*;
-import ru.example.SimbirSoftPractice.repository.ManDao;
+import ru.example.SimbirSoftPractice.mappers.MessageMapper;
+import ru.example.SimbirSoftPractice.repository.MenDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
 import ru.example.SimbirSoftPractice.util.YoutubeApi;
 
@@ -21,16 +21,17 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class BotServiceImpl implements BotService {
-    private final RoomService roomService;
-    private final ManService manService;
+   private final RoomService roomService;
+    private final MenService menService;
     private final RoomDao roomDao;
-    private final ManDao manDao;
+    private final MenDao menDao;
+    //private final MessageMapper messageMapper;
 
 
     @Override
-    @PreAuthorize("#messageServiceImpl.findById(messageForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
-    public MessageVO messageАnalysis(MessageForm messageForm) {
-        Message message = messageForm.toMessege(manDao,roomDao);
+    @PreAuthorize("#messageServiceImpl.findById(messageDTO.id).man.ban == false ") //TODO в spel-выражения я не уверен
+    public MessageDTO messageАnalysis(MessageDTO messageDTO) {
+        Message message = MessageMapper.INSTANCE.toMessage(messageDTO);
         String[] command = message.getTextMessage().split(" ");
         YoutubeApi youtubeApi = new YoutubeApi();
         Message requestMessage = new Message();
@@ -49,18 +50,18 @@ public class BotServiceImpl implements BotService {
                     case "create":
                         i++;
                         if (i == command.length) {
-                            RoomForm roomForm = new RoomForm();
-                            roomForm.setCreatorId(messageForm.getUserId());
-                            roomForm.setName(command[i]);
-                            roomForm.setPrivat(false);
-                            roomService.save(roomForm);
+                            RoomDTO roomDTO = new RoomDTO();
+                            roomDTO.setCreator(messageDTO.getMen());
+                            roomDTO.setName(command[i]);
+                            roomDTO.setPrivat(false);
+                            roomService.save(roomDTO);
                             textRequestMessege += "ok";
                         } else if (command[++i].equals("-c")) {
-                            RoomForm roomForm = new RoomForm();
-                            roomForm.setCreatorId(messageForm.getUserId());
-                            roomForm.setName(command[i]);
-                            roomForm.setPrivat(true);
-                            roomService.save(roomForm);
+                            RoomDTO roomDTO = new RoomDTO();
+                            roomDTO.setCreator(messageDTO.getMen());
+                            roomDTO.setName(command[i]);
+                            roomDTO.setPrivat(true);
+                            roomService.save(roomDTO);
                             textRequestMessege += "ok";
                         } else {
                             textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
@@ -84,18 +85,18 @@ public class BotServiceImpl implements BotService {
                     case "connect":
                         i++;
                         if (i == command.length) {
-                            RoomForm roomForm = null;
-                            roomForm.setId(roomDao.findByName(command[i]).get().getId());
-                            ManForm manForm = null;
-                            manForm.setId(messageForm.getUserId());
-                            roomService.addUser(roomForm, manForm);
+                            RoomDTO roomDTO = null;
+                            roomDTO.setName(command[i]);
+                            MenDTO menDTO = null;
+                            menDTO.setLogin(menDao.findById(messageDTO.getMen()).get().getLogin());
+                            roomService.addUser(roomDTO, menDTO);
                             textRequestMessege += "ok";
                         } else if (command[i++].equals("-l")) {
-                            RoomForm roomForm = null;
-                            roomForm.setId(roomDao.findByName(command[i]).get().getId());
-                            ManForm manForm = null;
-                            manForm.setId(manDao.findByLogin(command[++i]).get().getId());
-                            roomService.addUser(roomForm, manForm);
+                            RoomDTO roomDTO = null;
+                            roomDTO.setName(command[i]);
+                            MenDTO menDTO = null;
+                            menDTO.setLogin(command[++i]);
+                            roomService.addUser(roomDTO, menDTO);
                             textRequestMessege += "ok";
                         } else {
                             textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
@@ -104,19 +105,19 @@ public class BotServiceImpl implements BotService {
                     case "disconnect":
                         i++;
                         if (i == command.length) {
-                            RoomForm roomForm = null;
-                            roomForm.setId(roomDao.findByName(command[i]).get().getId());
-                            ManForm manForm = null;
-                            manForm.setId(messageForm.getUserId());
-                            roomService.deleteUser(roomForm, manForm);
+                            RoomDTO roomDTO = null;
+                            roomDTO.setName(command[i]);
+                            MenDTO menDTO = null;
+                            menDTO.setLogin(menDao.findById(messageDTO.getMen()).get().getLogin());
+                            roomService.deleteUser(roomDTO, menDTO);
                             textRequestMessege += "ok";
                         } else if (command[i++].equals("-l")) {
-                            RoomForm roomForm = null;
+                            RoomDTO roomDTO = null;
                             int roomNameIndex = i - 1;
-                            roomForm.setId(roomDao.findByName(command[roomNameIndex]).get().getId());
-                            ManForm manForm = null;
-                            manForm.setId(manDao.findByLogin(command[i++]).get().getId());
-                            roomService.deleteUser(roomForm, manForm);
+                            roomDTO.setName(command[i]);
+                            MenDTO menDTO = null;
+                            menDTO.setLogin(command[++i]);
+                            roomService.deleteUser(roomDTO, menDTO);
                             textRequestMessege += "ok";
                         } else {
                             textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
@@ -130,29 +131,29 @@ public class BotServiceImpl implements BotService {
                 i++;
                 switch (command[i]) {
                     case "rename":       //user rename {login пользователя} {Новый username} // переделал команду
-                        ManForm manForm = null;
-                        manForm.setLogin(manDao.findByLogin(command[++i]).get().getLogin());
+                        MenDTO menDTO = null;
+                        menDTO.setLogin(menDao.findByLogin(command[++i]).get().getLogin());
                         i++;
                         String newUserName = command[i];
-                        manService.commandRename(manForm, newUserName);
+                        menService.commandRename(menDTO, newUserName);
                         textRequestMessege += "ok";
                         break;
                     case "ban":         //user ban {login пользователя}// переделал команду
                         i++;
                         String loginban = command[i];
-                        ManForm manformban = null;
-                        manformban.setId(manDao.findByLogin(loginban).get().getId());
-                        manService.ban(manformban);
+                        MenDTO manformban = null;
+                        manformban.setLogin(menDao.findByLogin(loginban).get().getLogin());
+                        menService.ban(manformban);
                         if (i != command.length){
                             i++;
                             if(command[++i].equals("-l")){
                                 List<Room> roomList = roomDao.findAll();
-                                int idUserBan = Math.toIntExact(manDao.findByLogin(loginban).get().getId());
+                                int idUserBan = Math.toIntExact(menDao.findByLogin(loginban).get().getId());
                                 for (Room room : roomList){
-                                    List<Man> manList = room.getMen();
-                                    for (Man man : manList){
-                                        if (man.getId() == idUserBan){
-                                            roomService.deleteUserComand(room,man);
+                                    List<Men> menList = room.getMen();
+                                    for (Men men : menList){
+                                        if (men.getId() == idUserBan){
+                                            roomService.deleteUserComand(room, men);
                                         }
                                     }
                                 }
@@ -163,23 +164,23 @@ public class BotServiceImpl implements BotService {
                     case "unban":       //user unban {login пользователя}// добавил команду
                         i++;
                         String loginunban = command[i];
-                        ManForm manformunban = null;
-                        manformunban.setId(manDao.findByLogin(loginunban).get().getId());
-                        manService.unBan(manformunban);
+                        MenDTO manformunban = null;
+                        manformunban.setLogin(menDao.findByLogin(loginunban).get().getLogin());
+                        menService.unBan(manformunban);
                         textRequestMessege += "ok";
                         break;
                     case "moderator":       //user rename {login пользователя} {Новый username} // переделал команду
                         i++;
                         String loginmoderator = command[i];
                         i++;
-                        ManForm manformmoderator = null;
+                        MenDTO manformmoderator = null;
                         if (command[i].equals("-n")) {
-                            manformmoderator.setId(manDao.findByLogin(loginmoderator).get().getId());
-                            manService.addModerator(manformmoderator);
+                            manformmoderator.setLogin(menDao.findByLogin(loginmoderator).get().getLogin());
+                            menService.addModerator(manformmoderator);
                             textRequestMessege += "ok";
                         } else if (command[i].equals("-d")) {
-                            manformmoderator.setId(manDao.findByLogin(loginmoderator).get().getId());
-                            manService.deleteModerator(manformmoderator);
+                            manformmoderator.setLogin(menDao.findByLogin(loginmoderator).get().getLogin());
+                            menService.deleteModerator(manformmoderator);
                             textRequestMessege += "ok";
                         } else {
                             textRequestMessege +="Ошибка  команды. Посмотреть все команды //help";
@@ -271,8 +272,8 @@ public class BotServiceImpl implements BotService {
 
         requestMessage.setTextMessage(textRequestMessege);
         requestMessage.setRoom(roomDao.findByName("BOT").get());
-        MessageVO messageVO = new MessageVO(requestMessage);
-        return messageVO;
+
+        return MessageMapper.INSTANCE.toMessageDTO(requestMessage);
     }
 
     public String RemoveCommands() throws Exception{

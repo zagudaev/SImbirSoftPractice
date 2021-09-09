@@ -1,9 +1,9 @@
 package ru.example.SimbirSoftPractice.domain.modelVO;
 
 import lombok.Data;
+import ru.example.SimbirSoftPractice.domain.model.Men;
 import ru.example.SimbirSoftPractice.domain.model.Message;
 import ru.example.SimbirSoftPractice.domain.model.Room;
-import ru.example.SimbirSoftPractice.domain.model.Man;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class RoomVO {
         this.privat = room.isPrivat();
         if (room.getMen().size() > 0){
             List<ManVO> listVO = new ArrayList<>();
-            List<Man> list = room.getMen();
+            List<Men> list = room.getMen();
             for (int i = 0; i <room.getMen().size() ; i++) {
                 ManVO manVO = new ManVO(list.get(i));
                 listVO.add(manVO);

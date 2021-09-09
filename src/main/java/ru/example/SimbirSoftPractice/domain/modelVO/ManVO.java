@@ -1,8 +1,7 @@
 package ru.example.SimbirSoftPractice.domain.modelVO;
 
 import lombok.Data;
-import ru.example.SimbirSoftPractice.domain.model.Role;
-import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.domain.model.Men;
 
 @Data
 public class ManVO {
@@ -20,13 +19,13 @@ public class ManVO {
 
     private RoleVO role;
 
-    public ManVO(Man man){
-        this.id = man.getId();
-        this.login = man.getLogin();
-        this.password = man.getPassword();
-        this.username = man.getUsername();
-        this.ban = man.isBan();
-        this.role = new RoleVO(man.getRole());
+    public ManVO(Men men){
+        this.id = men.getId();
+        this.login = men.getLogin();
+        this.password = men.getPassword();
+        this.username = men.getUsername();
+        this.ban = men.isBan();
+        this.role = new RoleVO(men.getRole());
 
     }
 

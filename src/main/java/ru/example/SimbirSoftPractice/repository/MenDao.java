@@ -2,14 +2,14 @@ package ru.example.SimbirSoftPractice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.example.SimbirSoftPractice.domain.model.Man;
+import ru.example.SimbirSoftPractice.domain.model.Men;
 
 import java.util.Optional;
 @Repository
-public interface ManDao extends JpaRepository<Man, Long> {
-    Optional<Man> findByLogin(String login);
+public interface MenDao extends JpaRepository<Men, Long> {
+    Optional<Men> findByLogin(String login);
 
-    Optional<Man> findById (Long id);
+    Optional<Men> findById (Long id);
 
     void deleteById (Long id);
 

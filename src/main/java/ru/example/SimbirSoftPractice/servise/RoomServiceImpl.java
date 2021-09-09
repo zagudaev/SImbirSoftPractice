@@ -6,45 +6,47 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import ru.example.SimbirSoftPractice.domain.model.Man;
-import ru.example.SimbirSoftPractice.domain.modelForm.ManForm;
+import ru.example.SimbirSoftPractice.domain.model.Men;
+import ru.example.SimbirSoftPractice.domain.modelDTO.MenDTO;
 import ru.example.SimbirSoftPractice.exception.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Room;
-import ru.example.SimbirSoftPractice.domain.modelForm.RoomForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.RoomVO;
+import ru.example.SimbirSoftPractice.domain.modelDTO.RoomDTO;
+import ru.example.SimbirSoftPractice.mappers.RoomMapper;
 import ru.example.SimbirSoftPractice.repository.MessageDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
-import ru.example.SimbirSoftPractice.repository.ManDao;
+import ru.example.SimbirSoftPractice.repository.MenDao;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class RoomServiceImpl implements RoomService {
     private final RoomDao roomDao;
-    private final ManDao manDao;
+    private final MenDao menDao;
     private final MessageDao messageDao;
+    //private final RoomMapper roomMapper;
 
     @Override
     @Transactional
     //@PreAuthorize("#manDao.findById(roomForm.creatorId).get().ban == false") //TODO в spel-выражения я не уверен
-    public Long save(RoomForm roomForm) {
-        if (roomDao.findByName(roomForm.getName()).orElse(null) != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка создания комнты по id  : " + roomForm.getId() );
+    public Long save(RoomDTO roomDTO) {
+        if (roomDao.findByName(roomDTO.getName()).orElse(null) != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка создания комнты по Name  : " + roomDTO.getName() );
         }
-        Room room = roomForm.toRoom(manDao, messageDao);
+        Room room = new Room();
+        room = RoomMapper.INSTANCE.toRoom(roomDTO);
         return roomDao.save(room).getId();
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId== authentication.principal.id")
-    public Long update(RoomForm roomForm) {
-        Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomDTO.creator== authentication.principal.id")
+    public Long update(RoomDTO roomDTO) {
+        Room room= roomDao.findByName(roomDTO.getName()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomDTO.getName()));
 
-        room = roomForm.update(room, manDao, messageDao);
+        room = RoomMapper.INSTANCE.updateRoom(roomDTO,room);
         return roomDao.save(room).getId();
     }
 
@@ -66,52 +68,55 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public RoomVO findById(Long id) {
+    public RoomDTO findById(Long id) {
         Room room  = roomDao.findById(id).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + id));
-        RoomVO roomVO = new RoomVO(room);
-        return roomVO;
+
+        return RoomMapper.INSTANCE.toRoomDTO(room);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<RoomVO> findAll() {
-        return roomDao.findAll()
-                .stream()
-                .map(RoomVO::new)
-                .collect(Collectors.toList());
+    public List<RoomDTO> findAll() {
+        List<Room> roomList = roomDao.findAll();
+        List<RoomDTO> roomDTOList = new ArrayList<>();
+        for (Room room : roomList) {
+            roomDTOList.add(RoomMapper.INSTANCE.toRoomDTO(room));
+        }
+
+        return roomDTOList;
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomForm.creatorId== authentication.principal.id") //TODO в spel-выражения я не уверен
-    public void addUser(RoomForm roomForm, ManForm manForm) {
-        Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
-        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
-        List<Man> list = room.getMen();
-        list.add(man);
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_MODERATOR') OR #roomDTO.creator== authentication.principal.id") //TODO в spel-выражения я не уверен
+    public void addUser(RoomDTO roomDTO, MenDTO menDTO) {
+        Room room= roomDao.findByName(roomDTO.getName()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomDTO.getName()));
+        Men men = menDao.findByLogin(menDTO.getLogin()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + menDTO.getLogin()));
+        List<Men> list = room.getMen();
+        list.add(men);
         room.setMen(list);
         roomDao.save(room);
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomForm.creatorId == authentication.principal.id OR #manForm.id == authentication.principal.id") //TODO в spel-выражения я не уверен
-    public void deleteUser(RoomForm roomForm, ManForm manForm) {
-        Room room= roomDao.findById(roomForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomForm.getId()));
-        Man man = manDao.findById(manForm.getId()).orElseThrow(() ->
-                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + manForm.getId()));
-        List<Man> list = room.getMen();
-        list.remove(man);
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR #roomDTO.creator == authentication.principal.id OR #menDTO.id == authentication.principal.id") //TODO в spel-выражения я не уверен
+    public void deleteUser(RoomDTO roomDTO, MenDTO menDTO) {
+        Room room= roomDao.findByName(roomDTO.getName()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найдена комната с ID = " + roomDTO.getName()));
+        Men men = menDao.findByLogin(menDTO.getLogin()).orElseThrow(() ->
+                new ResponseException(HttpStatus.BAD_REQUEST, "Не найден пользователь с ID = " + menDTO.getLogin()));
+        List<Men> list = room.getMen();
+        list.remove(men);
         room.setMen(list);
         roomDao.save(room);
     }
-    public void deleteUserComand(Room room, Man man) {
-        List<Man> list = room.getMen();
-        list.remove(man);
+    public void deleteUserComand(Room room, Men men) {
+        List<Men> list = room.getMen();
+        list.remove(men);
         room.setMen(list);
         roomDao.save(room);
     }

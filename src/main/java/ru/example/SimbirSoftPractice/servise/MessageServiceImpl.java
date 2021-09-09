@@ -2,47 +2,47 @@ package ru.example.SimbirSoftPractice.servise;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.example.SimbirSoftPractice.exception.ResponseException;
 import ru.example.SimbirSoftPractice.domain.model.Message;
-import ru.example.SimbirSoftPractice.domain.modelForm.MessageForm;
-import ru.example.SimbirSoftPractice.domain.modelVO.MessageVO;
+import ru.example.SimbirSoftPractice.domain.modelDTO.MessageDTO;
+import ru.example.SimbirSoftPractice.mappers.MessageMapper;
 import ru.example.SimbirSoftPractice.repository.MessageDao;
 import ru.example.SimbirSoftPractice.repository.RoomDao;
-import ru.example.SimbirSoftPractice.repository.ManDao;
+import ru.example.SimbirSoftPractice.repository.MenDao;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class MessageServiceImpl implements MessageService {
     private final MessageDao messageDao;
-    private final ManDao manDao;
+    private final MenDao menDao;
     private final RoomDao roomDao;
+    //private final MessageMapper messageMapper;
 
     @Override
     @Transactional
     //@PreAuthorize("#messageServiceImpl.findById(messegeForm.id).man.ban == false ") //TODO в spel-выражения я не уверен
-    public MessageVO save(MessageForm massegeForm) {
-        Message message = massegeForm.toMessege(manDao,roomDao);
+    public MessageDTO save(MessageDTO messageDTO) {
+        Message message = new Message();
+        message = MessageMapper.INSTANCE.toMessage(messageDTO);
         messageDao.save(message);
-        return new MessageVO(message);
+        return MessageMapper.INSTANCE.toMessageDTO(message);
 
     }
 
     @Override
     @Transactional
-    public MessageVO update(MessageForm messageForm) {
-        Message message= messageDao.findById(messageForm.getId()).orElseThrow(() ->
-             new ResponseException(HttpStatus.BAD_REQUEST, "Не найден сообщение с ID = " + messageForm.getId()));
+    public MessageDTO update(MessageDTO messageDTO) {
+        Message message= messageDao.findById(messageDTO.getId()).orElseThrow(() ->
+             new ResponseException(HttpStatus.BAD_REQUEST, "Не найден сообщение с ID = " + messageDTO.getId()));
 
-        message = messageForm.update(message, manDao,roomDao);
+        message = MessageMapper.INSTANCE.updateMessage(messageDTO,message);
         messageDao.save(message);
-        return new MessageVO(message);
+        return MessageMapper.INSTANCE.toMessageDTO(message);
     }
 
     @Override
@@ -58,34 +58,38 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional(readOnly = true)
-    public MessageVO findById(Long id) {
+    public MessageDTO findById(Long id) {
         Message massege = messageDao.findById(id).orElseThrow(() ->
                 new ResponseException(HttpStatus.BAD_REQUEST, "Не найден сообщение с ID = " + id));
-        MessageVO messageVO = new MessageVO(massege);
-        return messageVO;
+        MessageDTO messageDTO = MessageMapper.INSTANCE.toMessageDTO(massege);
+        return messageDTO;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<MessageVO> findAll() {
-        return messageDao.findAll()
-                .stream()
-                .map(MessageVO::new)
-                .collect(Collectors.toList());
+    public List<MessageDTO> findAll() {
+        List<Message> messageList = messageDao.findAll();
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+        for (Message message : messageList) {
+            messageDTOList.add(MessageMapper.INSTANCE.toMessageDTO(message));
+        }
+
+        return messageDTOList;
     }
 
     @Override
     @Transactional
-    public MessageVO change(MessageForm messageForm) {
-         Message message = messageDao.findById(messageForm.getId()).get();
-         if (messageDao.findById(messageForm.getId()).orElse(null) != null){
-             message = messageForm.update(message, manDao,roomDao);
+    public MessageDTO change(MessageDTO messageDTO) {
+         Message message = messageDao.findById(messageDTO.getId()).get();
+         if (messageDao.findById(messageDTO.getId()).orElse(null) != null){
+             message = MessageMapper.INSTANCE.toMessage(messageDTO);
          }else{
-             message = messageForm.toMessege(manDao,roomDao);
+             message = new Message();
+             message = MessageMapper.INSTANCE.toMessage(messageDTO);
          }
         messageDao.save(message);
 
 
-        return new MessageVO(message);
+        return MessageMapper.INSTANCE.toMessageDTO(message);
     }
 }

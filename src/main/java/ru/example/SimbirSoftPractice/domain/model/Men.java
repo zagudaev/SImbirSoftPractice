@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Table
 @NoArgsConstructor
-public class Man implements UserDetails {
+public class Men implements UserDetails {
     @Id
     @GeneratedValue
     private Long id;
@@ -36,7 +36,7 @@ public class Man implements UserDetails {
     @JoinColumn
     private Role role;
 
-    @OneToMany(mappedBy = "man")
+    @OneToMany(mappedBy = "men")
     private List<Message> messages;
 
 
